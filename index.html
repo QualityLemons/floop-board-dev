@@ -138,14 +138,9 @@
 
     <div class="form-container">
         <div class="input-group">
-            <label for="userEmail">Email Address *</label>
-            <input type="email" id="userEmail" placeholder="email@example.com" required>
-        </div>
-        <div class="input-group">
             <label for="userPostcode">Postcode *</label>
             <input type="text" id="userPostcode" placeholder="e.g. SW1A 1AA" required>
         </div>
-
         <div class="canvas-area">
             <label>Draw your feedback below *</label>
             <canvas id="paintCanvas" width="600" height="350"></canvas>
@@ -209,7 +204,7 @@
             // IMPORTANT: Paste your Google Web App URL (from the Apps Script deployment) here
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzYaUCZ52geM85ixdImubfE5EGWdYEoX-MHdmknQQuSpIgfhBCWdWXR_tyLXs3q1LJi/exec'; 
             if (!email.includes('@') || !postcode) {
-                alert("Please enter a valid email and postcode.");
+                alert("Please enter a postcode.");
                 return;
             }
 

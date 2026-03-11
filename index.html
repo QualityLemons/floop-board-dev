@@ -8,7 +8,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            // Your Public Key is now initialized
             emailjs.init("xe0f4QZvOX0K3dKIg"); 
         })();
     </script>
@@ -100,13 +99,12 @@
             cursor: pointer; 
             font-weight: bold; 
             font-size: 1rem;
-            transition: transform 0.2s, opacity 0.3s; 
+            transition: all 0.2s; 
         }
 
         .clear-btn { background: #ecf0f1; color: var(--primary); }
         .send-btn { background: var(--success); color: white; flex-grow: 1; max-width: 300px; }
         button:hover { transform: translateY(-2px); opacity: 0.9; }
-        button:active { transform: translateY(0); }
         button:disabled { background: #bdc3c7; cursor: not-allowed; }
 
         @media (max-width: 600px) {
@@ -159,24 +157,26 @@
     </div>
 
     <script>
-        // Setup Canvas
         const canvas = document.getElementById('paintCanvas');
         const ctx = canvas.getContext('2d');
         const btn = document.getElementById('sendBtn');
         let drawing = false;
 
-        ctx.lineWidth = 4;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = '#2c3e50';
+        // Initialize Canvas with White Background
+        function initCanvas() {
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#2c3e50';
+        }
+        initCanvas();
 
         function getPosition(e) {
             const rect = canvas.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return {
-                x: clientX - rect.left,
-                y: clientY - rect.top
-            };
+            return { x: clientX - rect.left, y: clientY - rect.top };
         }
 
         function startPosition(e) {
@@ -196,16 +196,17 @@
             ctx.stroke();
         }
 
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        function clearCanvas() { 
+            ctx.fillRect(0, 0, canvas.width, canvas.height); 
+        }
 
-        // Send Logic
         function sendEmail() {
             const email = document.getElementById('userEmail').value;
             const postcode = document.getElementById('userPostcode').value;
 
-            // Simple check
-            if (!email || !postcode) {
-                alert("Please fill in your email and postcode first!");
+            // Simple Email Validation
+            if (!email.includes('@') || !postcode) {
+                alert("Please enter a valid email and postcode.");
                 return;
             }
 
@@ -220,15 +221,11 @@
                 my_image_data: base64Image 
             };
 
-            // Replace these with your actual IDs from EmailJS
             emailjs.send("service_66hht0i","template_a745g4m", templateParams)
                 .then(function() {
+                    btn.innerText = "Sent! Redirecting...";
                     alert('Thanks for your Floop! feedback!');
-                    btn.innerText = "Submit Feedback";
-                    btn.disabled = false;
-                    clearCanvas();
-                    document.getElementById('userEmail').value = "";
-                    document.getElementById('userPostcode').value = "";
+                    location.reload(); // Refreshes page to clear everything
                 }, function(error) {
                     alert('Oops! Send failed: ' + error.text);
                     btn.innerText = "Submit Feedback";
@@ -236,7 +233,6 @@
                 });
         }
 
-        // Event Listeners
         canvas.addEventListener('mousedown', startPosition);
         canvas.addEventListener('mouseup', finishedPosition);
         canvas.addEventListener('mousemove', draw);

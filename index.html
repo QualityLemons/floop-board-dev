@@ -200,11 +200,13 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height); 
         }
 
-        function sendEmail() {
+        // Updated Send Logic with Google Sheets integration
+        async function sendEmail() {
             const email = document.getElementById('userEmail').value;
             const postcode = document.getElementById('userPostcode').value;
-
-            // Simple Email Validation
+            
+            // IMPORTANT: Paste your Google Web App URL (from the Apps Script deployment) here
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzYaUCZ52geM85ixdImubfE5EGWdYEoX-MHdmknQQuSpIgfhBCWdWXR_tyLXs3q1LJi/exec'; 
             if (!email.includes('@') || !postcode) {
                 alert("Please enter a valid email and postcode.");
                 return;
@@ -214,23 +216,36 @@
             btn.disabled = true;
 
             const base64Image = canvas.toDataURL('image/png');
-
             const templateParams = {
                 user_email: email,
                 user_postcode: postcode,
                 my_image_data: base64Image 
             };
 
-            emailjs.send("service_66hht0i","template_a745g4m", templateParams)
-                .then(function() {
-                    btn.innerText = "Sent! Redirecting...";
-                    alert('Thanks for your Floop! feedback!');
-                    location.reload(); // Refreshes page to clear everything
-                }, function(error) {
-                    alert('Oops! Send failed: ' + error.text);
-                    btn.innerText = "Submit Feedback";
-                    btn.disabled = false;
+            try {
+                // 1. Send via EmailJS
+                const emailPromise = emailjs.send("service_66hht0i", "template_a745g4m", templateParams);
+
+                // 2. Send via Google Apps Script (Google Sheets)
+                const sheetPromise = fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(templateParams)
                 });
+
+                // Wait for both to finish
+                await Promise.all([emailPromise, sheetPromise]);
+
+                alert('Success! Your feedback has been sent to our email and saved to the gallery spreadsheet.');
+                location.reload();
+
+            } catch (error) {
+                alert('Oops! Something went wrong: ' + error);
+                btn.innerText = "Submit Feedback";
+                btn.disabled = false;
+            }
         }
 
         canvas.addEventListener('mousedown', startPosition);

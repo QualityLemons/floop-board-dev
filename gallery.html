@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floop! - Feedback Gallery</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #f4f7f6; 
+            padding: 40px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        h1 { text-align: center; color: #2c3e50; font-size: 3rem; }
+        .gallery-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 20px; 
+            margin-top: 40px; 
+        }
+        .feedback-card { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            text-align: center;
+        }
+        .feedback-card img { 
+            width: 100%; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+        }
+        .meta { 
+            margin-top: 10px; 
+            font-size: 0.9rem; 
+            color: #7f8c8d; 
+        }
+        .nav-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="nav-btn">← Back to Feedback Form</a>
+    <h1>Floop Gallery</h1>
+    <div id="gallery" class="gallery-grid">Loading drawings...</div>
+
+    <script>
+        // Your specific Sheet ID
+        const SHEET_ID = '1Ma-xNmBDuCCvdP6l_z9w3jn9i_z25JYFtozVTzAiJ_w';
+        // This URL fetches the sheet as a CSV (the easiest way to read public data)
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+
+        async function fetchGallery() {
+            try {
+                const response = await fetch(url);
+                const data = await response.text();
+                
+                // Simple CSV parser
+                const rows = data.split('\n').slice(1); // Skip header row
+                const gallery = document.getElementById('gallery');
+                gallery.innerHTML = '';
+
+                rows.reverse().forEach(row => {
+                    // Split row by comma but handle cases where data might contain commas
+                    const columns = row.split('","').map(col => col.replace(/"/g, ''));
+                    
+                    if (columns.length >= 4) {
+                        const date = columns[0];
+                        const postcode = columns[2];
+                        const imageData = columns[3];
+
+                        const card = document.createElement('div');
+                        card.className = 'feedback-card';
+                        card.innerHTML = `
+                            <img src="${imageData}" alt="Feedback Drawing">
+                            <div class="meta">Location: ${postcode} | ${new Date(date).toLocaleDateString()}</div>
+                        `;
+                        gallery.appendChild(card);
+                    }
+                });
+            } catch (error) {
+                document.getElementById('gallery').innerText = "Failed to load gallery. Make sure there is data in the sheet!";
+                console.error(error);
+            }
+        }
+
+        fetchGallery();
+    </script>
+</body>
+</html>

@@ -30,6 +30,20 @@
             padding: 20px; 
             background-color: var(--light); 
         }
+
+        nav { text-align: right; margin-bottom: 20px; }
+        .gallery-link {
+            display: inline-block;
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid var(--secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .gallery-link:hover { background-color: var(--secondary); color: white; }
+
         header { text-align: center; margin-bottom: 40px; }
         h1 { color: var(--primary); font-size: 3.5rem; margin-bottom: 0; }
         h2 { font-weight: 300; color: #7f8c8d; }
@@ -105,17 +119,14 @@
         .send-btn { background: var(--success); color: white; flex-grow: 1; max-width: 300px; }
         button:hover { transform: translateY(-2px); opacity: 0.9; }
         button:disabled { background: #bdc3c7; cursor: not-allowed; }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; }
-            .form-container { padding: 20px; }
-        }
     </style>
 </head>
 <body>
-<nav style="text-align: right; margin-bottom: 20px;">
-    <a href="gallery.html" class="gallery-link">View Feedback Gallery →</a>
-</nav>
+
+    <nav>
+        <a href="gallery.html" class="gallery-link">View Feedback Gallery →</a>
+    </nav>
+
     <header>
         <h1>Floop!</h1>
         <h2>Welcome to the future of good feedback</h2>
@@ -128,19 +139,20 @@
         </div>
         <div class="card">
             <h3>Why use Floop?</h3>
-            <p>It provides a unique, visual way to express thoughts that words sometimes can't capture.</p>
+            <p>Visual expression for thoughts that words sometimes can't capture.</p>
         </div>
         <div class="card">
             <h3>Your Privacy</h3>
-            <p>Your data is used solely to improve the Floop tool. We never share personal details without consent.</p>
+            <p>Only your postcode is required to help us understand where feedback comes from.</p>
         </div>
     </div>
 
     <div class="form-container">
         <div class="input-group">
-            <label for="userEmail">Email Address *</label>
-            <input type="email" id="userEmail" placeholder="email@example.com" required>
+            <label for="userEmail">Email Address (Optional)</label>
+            <input type="email" id="userEmail" placeholder="email@example.com">
         </div>
+        
         <div class="input-group">
             <label for="userPostcode">Postcode *</label>
             <input type="text" id="userPostcode" placeholder="e.g. SW1A 1AA" required>
@@ -163,7 +175,6 @@
         const btn = document.getElementById('sendBtn');
         let drawing = false;
 
-        // Initialize Canvas with White Background
         function initCanvas() {
             ctx.fillStyle = "white";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -183,8 +194,7 @@
         function startPosition(e) {
             drawing = true;
             const pos = getPosition(e);
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
+            ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
         }
 
         function finishedPosition() { drawing = false; }
@@ -197,19 +207,16 @@
             ctx.stroke();
         }
 
-        function clearCanvas() { 
-            ctx.fillRect(0, 0, canvas.width, canvas.height); 
-        }
+        function clearCanvas() { ctx.fillRect(0, 0, canvas.width, canvas.height); }
 
-        // Updated Send Logic with Google Sheets integration
         async function sendEmail() {
             const email = document.getElementById('userEmail').value;
             const postcode = document.getElementById('userPostcode').value;
-            
-            // IMPORTANT: Paste your Google Web App URL (from the Apps Script deployment) here
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzYaUCZ52geM85ixdImubfE5EGWdYEoX-MHdmknQQuSpIgfhBCWdWXR_tyLXs3q1LJi/exec'; 
-            if (!email.includes('@') || !postcode) {
-                alert("Please enter a valid email and postcode.");
+
+            // Validation: Only postcode is now mandatory
+            if (!postcode) {
+                alert("Please enter your postcode to submit feedback.");
                 return;
             }
 
@@ -218,16 +225,13 @@
 
             const base64Image = canvas.toDataURL('image/png');
             const templateParams = {
-                user_email: email,
+                user_email: email || "Not Provided", // Send "Not Provided" if empty
                 user_postcode: postcode,
                 my_image_data: base64Image 
             };
 
             try {
-                // 1. Send via EmailJS
                 const emailPromise = emailjs.send("service_66hht0i", "template_a745g4m", templateParams);
-
-                // 2. Send via Google Apps Script (Google Sheets)
                 const sheetPromise = fetch(scriptURL, {
                     method: 'POST',
                     mode: 'no-cors', 
@@ -236,11 +240,10 @@
                     body: JSON.stringify(templateParams)
                 });
 
-                // Wait for both to finish
                 await Promise.all([emailPromise, sheetPromise]);
 
-                alert('Success! Your feedback has been sent to our email and saved to the gallery spreadsheet.');
-                location.reload();
+                alert('Success! Taking you to the gallery now...');
+                window.location.href = 'gallery.html'; 
 
             } catch (error) {
                 alert('Oops! Something went wrong: ' + error);

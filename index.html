@@ -24,40 +24,98 @@
     <p>Your feedback is valuable and will be used to improve the Floop tool and enhance the user experience. We may also share aggregated feedback with our community to inspire new features and improvements.</p>
 
     <h3>Try Floop!</h3>
-    <canvas id="paintCanvas" width="600" height="400" st>yle="border:1px solid black;"></canvas>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas to Email</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // Replace 'YOUR_PUBLIC_KEY' with your actual Public Key from EmailJS
+            emailjs.init("YOUR_PUBLIC_KEY");
+        })();
+    </script>
+    
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        canvas { border: 2px solid #333; background: #fff; cursor: crosshair; touch-action: none; }
+        .controls { margin-top: 15px; }
+        button { padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>Sign and Send</h2>
+    <canvas id="paintCanvas" width="500" height="300"></canvas>
+
+    <div class="controls">
+        <button onclick="clearCanvas()">Clear</button>
+        <button id="sendBtn" onclick="sendEmail()">Send to Email</button>
+    </div>
+
     <script>
         const canvas = document.getElementById('paintCanvas');
         const ctx = canvas.getContext('2d');
+        const btn = document.getElementById('sendBtn');
         let drawing = false;
 
         ctx.lineWidth = 3;
         ctx.lineCap = 'round';
         ctx.strokeStyle = 'black';
 
-        function startPosition(e) {
-            drawing = true;
-            draw(e); // Allow drawing dots
-        }
-
-        function finishedPosition() {
-            drawing = false;
-            ctx.beginPath(); // Reset path to prevent lines connecting
-        }
-
+        // Drawing Logic
+        function startPosition(e) { drawing = true; draw(e); }
+        function finishedPosition() { drawing = false; ctx.beginPath(); }
+        
         function draw(e) {
             if (!drawing) return;
-            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            
+            ctx.lineTo(x, y);
             ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.moveTo(x, y);
         }
 
+        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        // 2. The EmailJS Integration
+        function sendEmail() {
+            btn.innerText = "Sending...";
+            btn.disabled = true;
+
+            // Convert canvas to a Base64 string (image/png)
+            const base64Image = canvas.toDataURL('image/png');
+
+            const templateParams = {
+                to_name: "Recipient Name",
+                // This variable must match the {{my_image_data}} in your EmailJS template
+                my_image_data: base64Image 
+            };
+
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(function(response) {
+                    alert('SUCCESS! Email sent.');
+                    btn.innerText = "Send to Email";
+                    btn.disabled = false;
+                }, function(error) {
+                    alert('FAILED... ' + JSON.stringify(error));
+                    btn.innerText = "Send to Email";
+                    btn.disabled = false;
+                });
+        }
+
+        // Desktop and Mobile support
         canvas.addEventListener('mousedown', startPosition);
         canvas.addEventListener('mouseup', finishedPosition);
         canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', startPosition);
+        canvas.addEventListener('touchend', finishedPosition);
+        canvas.addEventListener('touchmove', draw);
     </script>
 </body>
 </html>
-
 </body>
 </html>

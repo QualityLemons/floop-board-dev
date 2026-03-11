@@ -3,33 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floop! - Feedback of the Future</title>
+    <title>Floop! - Creative Feedback</title>
     
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            // Added quotes around your Public Key
+            // Your Public Key is now initialized
             emailjs.init("xe0f4QZvOX0K3dKIg"); 
         })();
     </script>
     
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --light: #f4f7f6;
+        }
+
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background-color: var(--light); 
+        }
+
         header { text-align: center; margin-bottom: 40px; }
-        h1 { color: #2c3e50; font-size: 3rem; margin-bottom: 0; }
+        h1 { color: var(--primary); font-size: 3.5rem; margin-bottom: 0; }
+        h2 { font-weight: 300; color: #7f8c8d; }
+
+        .info-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px; 
+            margin-bottom: 40px; 
+        }
+
+        .card { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+        }
+
+        .form-container { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+        }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #ddd; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            transition: border-color 0.3s;
+        }
+        input:focus { border-color: var(--secondary); outline: none; }
+
+        .canvas-area { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            margin-top: 20px;
+        }
         
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .col { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        
-        .canvas-container { display: flex; flex-direction: column; align-items: center; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        canvas { border: 2px solid #2c3e50; background: #fff; cursor: crosshair; touch-action: none; border-radius: 4px; }
-        
-        .controls { margin-top: 20px; display: flex; gap: 10px; }
-        button { padding: 12px 25px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
-        .clear-btn { background: #e74c3c; color: white; }
-        .send-btn { background: #27ae60; color: white; }
-        button:hover { opacity: 0.8; }
-        button:disabled { background: #bdc3c7; }
+        canvas { 
+            border: 2px solid var(--primary); 
+            background: #fff; 
+            cursor: crosshair; 
+            touch-action: none; 
+            border-radius: 8px;
+            max-width: 100%;
+        }
+
+        .controls { 
+            margin-top: 20px; 
+            display: flex; 
+            gap: 15px; 
+            width: 100%;
+            justify-content: center;
+        }
+
+        button { 
+            padding: 15px 30px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 1rem;
+            transition: transform 0.2s, opacity 0.3s; 
+        }
+
+        .clear-btn { background: #ecf0f1; color: var(--primary); }
+        .send-btn { background: var(--success); color: white; flex-grow: 1; max-width: 300px; }
+        button:hover { transform: translateY(-2px); opacity: 0.9; }
+        button:active { transform: translateY(0); }
+        button:disabled { background: #bdc3c7; cursor: not-allowed; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .form-container { padding: 20px; }
+        }
     </style>
 </head>
 <body>
@@ -40,31 +123,43 @@
     </header>
 
     <div class="info-grid">
-        <div class="col">
+        <div class="card">
             <h3>What is Floop?</h3>      
-            <p>Floop is a tool created by a frustrated activity designer to support children, young people and young adults to give feedback at their own pace.</p>
+            <p>A tool to support children and young people to give feedback at their own pace.</p>
         </div>
-        <div class="col">
+        <div class="card">
             <h3>Why use Floop?</h3>
-            <p>Floop provides a unique and engaging way for users to express their thoughts and feelings through creative drawing.</p>
+            <p>It provides a unique, visual way to express thoughts that words sometimes can't capture.</p>
         </div>
-        <div class="col">
-            <h3>How is my feedback used?</h3>
-            <p>Your feedback is valuable and will be used to improve the Floop tool and enhance the user experience for everyone.</p>
+        <div class="card">
+            <h3>Your Privacy</h3>
+            <p>Your data is used solely to improve the Floop tool. We never share personal details without consent.</p>
         </div>
     </div>
 
-    <div class="canvas-container">
-        <h3>Draw your feedback below</h3>
-        <canvas id="paintCanvas" width="600" height="350"></canvas>
+    <div class="form-container">
+        <div class="input-group">
+            <label for="userEmail">Email Address *</label>
+            <input type="email" id="userEmail" placeholder="email@example.com" required>
+        </div>
+        <div class="input-group">
+            <label for="userPostcode">Postcode *</label>
+            <input type="text" id="userPostcode" placeholder="e.g. SW1A 1AA" required>
+        </div>
 
-        <div class="controls">
-            <button class="clear-btn" onclick="clearCanvas()">Clear</button>
-            <button id="sendBtn" class="send-btn" onclick="sendEmail()">Send Feedback</button>
+        <div class="canvas-area">
+            <label>Draw your feedback below *</label>
+            <canvas id="paintCanvas" width="600" height="350"></canvas>
+            
+            <div class="controls">
+                <button type="button" class="clear-btn" onclick="clearCanvas()">Clear Canvas</button>
+                <button type="button" id="sendBtn" class="send-btn" onclick="sendEmail()">Submit Feedback</button>
+            </div>
         </div>
     </div>
 
     <script>
+        // Setup Canvas
         const canvas = document.getElementById('paintCanvas');
         const ctx = canvas.getContext('2d');
         const btn = document.getElementById('sendBtn');
@@ -95,7 +190,7 @@
         
         function draw(e) {
             if (!drawing) return;
-            e.preventDefault(); // Prevent scrolling on touch
+            e.preventDefault();
             const pos = getPosition(e);
             ctx.lineTo(pos.x, pos.y);
             ctx.stroke();
@@ -103,12 +198,51 @@
 
         function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
+        // Send Logic
         function sendEmail() {
+            const email = document.getElementById('userEmail').value;
+            const postcode = document.getElementById('userPostcode').value;
+
+            // Simple check
+            if (!email || !postcode) {
+                alert("Please fill in your email and postcode first!");
+                return;
+            }
+
             btn.innerText = "Sending...";
             btn.disabled = true;
 
             const base64Image = canvas.toDataURL('image/png');
 
             const templateParams = {
-                feedback_image: base64Image
+                user_email: email,
+                user_postcode: postcode,
+                my_image_data: base64Image 
             };
+
+            // Replace these with your actual IDs from EmailJS
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(function() {
+                    alert('Thanks for your Floop! feedback!');
+                    btn.innerText = "Submit Feedback";
+                    btn.disabled = false;
+                    clearCanvas();
+                    document.getElementById('userEmail').value = "";
+                    document.getElementById('userPostcode').value = "";
+                }, function(error) {
+                    alert('Oops! Send failed: ' + error.text);
+                    btn.innerText = "Submit Feedback";
+                    btn.disabled = false;
+                });
+        }
+
+        // Event Listeners
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', finishedPosition);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', startPosition);
+        canvas.addEventListener('touchend', finishedPosition);
+        canvas.addEventListener('touchmove', draw);
+    </script>
+</body>
+</html>

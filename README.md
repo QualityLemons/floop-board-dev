@@ -1,0 +1,1 @@
+Hi, welcome to Floop, an activity feedback app from John E. Parman. I have not been a programmer for long, but I have been a bid development and community activity designer for many years. I am excited to use the skills I am learning to create a simple tool that could eventually be used to create meaningful and simple feedback loops for various activities in the community. 

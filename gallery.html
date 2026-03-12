@@ -137,6 +137,29 @@
                 renderGallery(data.drawings);
             }
 
+           // Inside drawings.reverse().forEach(drawing => { ...
+
+// 1. Grab the raw date from the drawing object
+const rawDate = drawing.Timestamp;
+
+// 2. Try to format it, or provide a fallback if it's invalid
+let displayDate = "Date unknown";
+
+if (rawDate) {
+    const parsedDate = new Date(rawDate);
+    // Check if the date is actually valid before formatting
+    if (!isNaN(parsedDate.getTime())) {
+        displayDate = parsedDate.toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    }
+}
+
+// 3. Use displayDate in your HTML template
+// <div class="meta">Location: ${drawing.user_postcode} | ${displayDate}</div>
+ 
             // 3. Update Reaction Counts
             Object.keys(data.reactionCounts).forEach(key => {
                 const countSpan = document.getElementById(`count-${key}`);

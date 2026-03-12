@@ -59,20 +59,20 @@
         .feedback-card { 
             background: white; padding: 15px; border-radius: 12px; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            transition: transform 0.2s;
         }
+        .feedback-card:hover { transform: translateY(-5px); }
         .feedback-card img { width: 100%; border-radius: 8px; border: 1px solid #ddd; }
-        .meta { margin: 10px 0; font-size: 0.85rem; color: #7f8c8d; }
-
-        .reaction-bar {
-            display: flex; justify-content: space-between; gap: 5px;
-            margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee;
+        
+        .meta { 
+            margin-top: 15px; 
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            font-size: 0.85rem; 
+            color: #7f8c8d; 
+            display: flex;
+            justify-content: space-between;
         }
-        .reaction-chip {
-            border: 1px solid #e0e0e0; background: white; padding: 5px 8px;
-            border-radius: 15px; cursor: pointer; font-size: 0.8rem;
-            display: flex; align-items: center; gap: 4px; transition: all 0.2s;
-        }
-        .reaction-chip:hover { transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         footer {
             text-align: center; margin-top: auto; padding: 40px 20px 20px;
@@ -107,7 +107,6 @@
     </footer>
 
     <script>
-        // UPDATE THIS URL with your actual Apps Script Exec URL
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzAAj22Yw4p5nERryYpOyqb1FougMnIljAaG9AR34lvygLMKZGMI1es6WbX-DP7vm03/exec';
 
         async function refreshData() {
@@ -117,24 +116,19 @@
                 const galleryDiv = document.getElementById('gallery');
 
                 if (!data.drawings || data.drawings.length === 0) {
-                    galleryDiv.innerHTML = "<p style='grid-column: 1/-1;'>No drawings found. Check your Sheet!</p>";
+                    galleryDiv.innerHTML = "<p style='grid-column: 1/-1;'>No drawings found.</p>";
                     return;
                 }
 
-                // Initial render
-                if (galleryDiv.innerHTML.includes('Loading')) {
+                // We only need to render the gallery if the content has changed
+                // For simplicity, we'll re-render if the count is different
+                if (galleryDiv.innerHTML.includes('Loading') || galleryDiv.children.length !== data.drawings.length) {
                     renderGallery(data.drawings);
                 }
-
-                // Update reaction counts only
-                Object.keys(data.reactionCounts).forEach(key => {
-                    const countSpan = document.getElementById(`count-${key}`);
-                    if (countSpan) countSpan.innerText = data.reactionCounts[key];
-                });
                 
             } catch (error) {
                 console.error("Fetch Error:", error);
-                document.getElementById('gallery').innerHTML = "Error connecting to Google Sheets. Check permissions.";
+                document.getElementById('gallery').innerHTML = "Error connecting to Google Sheets.";
             }
         }
 
@@ -142,12 +136,11 @@
             const gallery = document.getElementById('gallery');
             gallery.innerHTML = '';
             
-            // Reverse so newest is at top
             [...drawings].reverse().forEach(drawing => {
                 const card = document.createElement('div');
                 card.className = 'feedback-card';
                 
-                // Date Logic
+                // Date Formatting
                 const rawDate = drawing.Timestamp;
                 let displayDate = "Date unknown";
                 if (rawDate) {
@@ -161,31 +154,17 @@
 
                 card.innerHTML = `
                     <img src="${drawing.my_image_data}" alt="Feedback Drawing">
-                    <div class="meta">Location: ${drawing.user_postcode || 'N/A'} | ${displayDate}</div>
-                    <div class="reaction-bar">
-                        <button class="reaction-chip" onclick="sendReaction('${drawing.rowId}', 'happy')">😊 <span id="count-${drawing.rowId}-happy">0</span></button>
-                        <button class="reaction-chip" onclick="sendReaction('${drawing.rowId}', 'sad')">😢 <span id="count-${drawing.rowId}-sad">0</span></button>
-                        <button class="reaction-chip" onclick="sendReaction('${drawing.rowId}', 'angry')">😡 <span id="count-${drawing.rowId}-angry">0</span></button>
-                        <button class="reaction-chip" onclick="sendReaction('${drawing.rowId}', 'anxious')">😰 <span id="count-${drawing.rowId}-anxious">0</span></button>
+                    <div class="meta">
+                        <span>📍 ${drawing.user_postcode || 'N/A'}</span>
+                        <span>📅 ${displayDate}</span>
                     </div>
                 `;
                 gallery.appendChild(card);
             });
         }
 
-        async function sendReaction(entryId, emotion) {
-            const countSpan = document.getElementById(`count-${entryId}-${emotion}`);
-            countSpan.innerText = parseInt(countSpan.innerText) + 1;
-
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ type: 'reaction', entryId: entryId, emotion: emotion })
-            });
-        }
-
         refreshData();
-        setInterval(refreshData, 5000);
+        setInterval(refreshData, 10000); // Check every 10s now that reactions are gone
 
         window.addEventListener('scroll', () => {
             document.getElementById('scrollTopBtn').style.display = window.scrollY > 300 ? 'block' : 'none';

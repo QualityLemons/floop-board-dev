@@ -109,14 +109,45 @@
 
         footer {
             text-align: center; margin-top: auto; padding: 40px 20px 20px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid #ddd; font-size: 0.9rem; color: #7f8c8d;
         }
+        footer a { color: var(--secondary); text-decoration: none; font-weight: 600; }
+        body.dark-theme footer { border-top-color: #444; }
     </style>
+</head>
+<body>
 
-    <footer>
-        <p>
-            &copy; 2026 Floop! Project | 
-            <a href="readme.html">Documentation</a> | 
-            <a href="wireframe.html">View Wireframe</a>
-        </p>
-    </footer>
+    <button id="themeToggle" class="theme-toggle">🌙 Dark Mode</button>
+
+    <nav>
+        <a href="gallery.html" class="nav-link">View Gallery →</a>
+    </nav>
+
+    <header>
+        <h1>Floop!</h1>
+        <h2>Welcome to the future of good feedback</h2>
+    </header>
+
+    <div class="info-grid">
+        <div class="card">
+            <h3>What is Floop?</h3>      
+            <p>A tool to support children and young people to give feedback at their own pace.</p>
+        </div>
+        <div class="card">
+            <h3>Your Privacy</h3>
+            <p>Only your postcode is required to help us understand where feedback comes from.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="input-group">
+            <label for="userEmail">Email Address (Optional)</label>
+            <input type="email" id="userEmail" placeholder="email@example.com">
+        </div>
+        <div class="input-group">
+            <label for="userPostcode">Postcode *</label>
+            <input type="text" id="userPostcode" placeholder="e.g. SW1A 1AA" required>
+        </div>
+
+        <div class="canvas-area">
+            <label>Draw your feedback below *</label><br>

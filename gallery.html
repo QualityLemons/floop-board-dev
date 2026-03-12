@@ -57,10 +57,10 @@
         // Your specific Sheet ID
         const SHEET_ID = '1Ma-xNmBDuCCvdP6l_z9w3jn9i_z25JYFtozVTzAiJ_w';
         // This URL fetches the sheet as a CSV (the easiest way to read public data)
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+        const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSuTXZ0e4aC_8P0Z9TngSX_xqf2EF7GGf6AI-cGBlVQ7bVHfrK_17EaHWtUoe_IAYQQZ6UgG9UbwQpu/pubhtml`;
 
 async function sendReaction(entryId, emotion) {
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxcADhS4bHRLcifjslSDCLp3SWNMa-jhV2tywbG9bRolbXYQ4fLwYbrduCBMWr66YlG/exec';    
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxt-K2R8ErsBOJ8TqHKDvbdeI1fN-4Bz_d42xMgHvJBkqao0ET0ZegSiMEma22SneX6/exec';    
     // Update UI immediately (Optimistic UI)
     const countSpan = document.getElementById(`count-${entryId}-${emotion}`);
     countSpan.innerText = parseInt(countSpan.innerText) + 1;

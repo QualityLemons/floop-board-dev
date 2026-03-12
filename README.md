@@ -1,5 +1,7 @@
 Hi, welcome to Floop!, an activity feedback app from QualityLemons. I have not been a programmer for long, but I have been a business development manager, grant manager, and community activity designer for many years. I hold a level 3 in adult education and training from Dudley College. I am excited to use the skills I am learning to create a simple tool that could eventually be used to create meaningful and simple feedback loops for various activities in the community, including class engagement.
 
+The app aims to create the conditions for active participation and participant submission response with js scripting to support emoticon reactions 
+
 You can review the wireframe page directly from the index page to understand my design intent. 
 
 

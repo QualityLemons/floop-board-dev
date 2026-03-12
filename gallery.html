@@ -107,7 +107,62 @@
     </footer>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzAAj22Yw4p5nERryYpOyqb1FougMnIljAaG9AR34lvygLMKZGMI1es6WbX-DP7vm03/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzj_WedFZnCgd5GsWNRe3-N-DGcivEKNdzxP2g3bzNFQAIuNlbEP-T7867T2VpJpXr9/exec';
+
+        function setupReactionCanvas(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    // Set canvas internal resolution to match display size
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    ctx.strokeStyle = "#3498db"; // Different color for reactions!
+    ctx.lineWidth = 2;
+
+    const getPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    };
+
+    canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
+    canvas.addEventListener('mousemove', (e) => {
+        if (!drawing) return;
+        const p = getPos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+    });
+    window.addEventListener('mouseup', () => drawing = false);
+}
+
+async function submitReaction(canvasId, originalRowId) {
+    const canvas = document.getElementById(canvasId);
+    const reactionData = canvas.toDataURL('image/png');
+    
+    const btn = canvas.nextElementSibling;
+    btn.innerText = "Saving...";
+    btn.disabled = true;
+
+    const payload = {
+        type: 'reaction_draw',
+        originalId: originalRowId,
+        reaction_image: reactionData
+    };
+
+    try {
+        await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        alert("Reaction posted!");
+        btn.innerText = "Post Reaction";
+        btn.disabled = false;
+        // Clear the canvas after successful post
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    } catch (e) {
+        alert("Error saving reaction.");
+    }
+}
 
         async function refreshData() {
             try {
@@ -133,35 +188,34 @@
         }
 
         function renderGallery(drawings) {
-            const gallery = document.getElementById('gallery');
-            gallery.innerHTML = '';
-            
-            [...drawings].reverse().forEach(drawing => {
-                const card = document.createElement('div');
-                card.className = 'feedback-card';
-                
-                // Date Formatting
-                const rawDate = drawing.Timestamp;
-                let displayDate = "Date unknown";
-                if (rawDate) {
-                    const parsedDate = new Date(rawDate);
-                    if (!isNaN(parsedDate.getTime())) {
-                        displayDate = parsedDate.toLocaleDateString('en-GB', {
-                            day: 'numeric', month: 'short', year: 'numeric'
-                        });
-                    }
-                }
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
+    
+    [...drawings].reverse().forEach((drawing, index) => {
+        const card = document.createElement('div');
+        card.className = 'feedback-card';
+        
+        // Unique ID for each reaction canvas
+        const canvasId = `react-canvas-${index}`;
 
-                card.innerHTML = `
-                    <img src="${drawing.my_image_data}" alt="Feedback Drawing">
-                    <div class="meta">
-                        <span>📍 ${drawing.user_postcode || 'N/A'}</span>
-                        <span>📅 ${displayDate}</span>
-                    </div>
-                `;
-                gallery.appendChild(card);
-            });
-        }
+        card.innerHTML = `
+            <img src="${drawing.my_image_data}" alt="Feedback Drawing">
+            <div class="meta">
+                <span>📍 ${drawing.user_postcode || 'N/A'}</span>
+            </div>
+            
+            <div class="reaction-area">
+                <label style="font-size: 0.7rem; display: block; margin-bottom: 5px;">React to the art:</label>
+                <canvas id="${canvasId}" class="reaction-canvas"></canvas>
+                <button class="reaction-btn" onclick="submitReaction('${canvasId}', '${drawing.rowId}')">Post Reaction</button>
+            </div>
+        `;
+        gallery.appendChild(card);
+        
+        // Initialize the drawing logic for THIS specific canvas
+        setupReactionCanvas(canvasId);
+    });
+}
 
         refreshData();
         setInterval(refreshData, 10000); // Check every 10s now that reactions are gone

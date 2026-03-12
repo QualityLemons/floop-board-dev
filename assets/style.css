@@ -21,6 +21,32 @@
     --secondary: #3498db; /* The Floop! Blue */
 }
 
+footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 30px 20px;
+    border-top: 1px solid #ddd;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+footer a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+/* Dark Mode Footer Adjustment */
+body.dark-theme footer {
+    border-top-color: #444;
+}
+
 .gallery-link:hover {
     background-color: var(--secondary);
     color: white;

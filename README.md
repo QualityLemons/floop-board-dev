@@ -2,7 +2,7 @@ Hi, welcome to Floop!, an activity feedback app from QualityLemons. I have not b
 
 The app aims to create the conditions for active participation and participant submission response with js scripting to support emoticon reactions 
 
-You can review the wireframe page directly from the index page to understand my design intent. 
+You can review the wireframe page directly from the index page to understand my design intent. Https://qualitylemons.github.io/floop-board-dev/wireframe.html
 
 
 You can access Floop! as a public page here: 

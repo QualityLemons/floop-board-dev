@@ -9,33 +9,43 @@
             --primary: #2c3e50;
             --secondary: #3498db;
             --light: #f4f7f6;
+            --text: #333;
         }
 
         body { 
             font-family: 'Segoe UI', sans-serif; 
             background-color: var(--light); 
-            padding: 40px; 
+            padding: 20px; 
             max-width: 1200px; 
             margin: 0 auto; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
+
+        nav { text-align: right; margin-bottom: 20px; }
+        .nav-link {
+            display: inline-block;
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid var(--secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        .nav-link:hover { background-color: var(--secondary); color: white; }
 
         h1 { text-align: center; color: var(--primary); font-size: 3rem; margin-bottom: 10px; }
         
-        /* Live Badge Style */
         .live-status {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #27ae60;
-            margin-bottom: 20px;
-            font-weight: bold;
+            text-align: center; font-size: 0.8rem; color: #27ae60;
+            margin-bottom: 20px; font-weight: bold;
         }
         .dot {
-            height: 10px;
-            width: 10px;
-            background-color: #27ae60;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 5px;
+            height: 10px; width: 10px; background-color: #27ae60;
+            border-radius: 50%; display: inline-block; margin-right: 5px;
             animation: blink 1.5s infinite;
         }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
@@ -47,66 +57,43 @@
         }
 
         .feedback-card { 
-            background: white; 
-            padding: 15px; 
-            border-radius: 12px; 
+            background: white; padding: 15px; border-radius: 12px; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            transition: transform 0.2s;
         }
-
         .feedback-card img { width: 100%; border-radius: 8px; border: 1px solid #ddd; }
-        
         .meta { margin: 10px 0; font-size: 0.85rem; color: #7f8c8d; }
 
-        /* Professional Reaction Chips */
         .reaction-bar {
-            display: flex;
-            justify-content: space-between;
-            gap: 5px;
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px solid #eee;
+            display: flex; justify-content: space-between; gap: 5px;
+            margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee;
         }
-
         .reaction-chip {
-            border: 1px solid #e0e0e0;
-            background: white;
-            padding: 5px 8px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            border: 1px solid #e0e0e0; background: white; padding: 5px 8px;
+            border-radius: 15px; cursor: pointer; font-size: 0.8rem;
+            display: flex; align-items: center; gap: 4px; transition: all 0.2s;
         }
-
         .reaction-chip:hover { transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .chip-happy:hover { background: #fff9c4; border-color: #fbc02d; }
-        .chip-sad:hover { background: #e3f2fd; border-color: #1e88e5; }
-        .chip-angry:hover { background: #ffebee; border-color: #e53935; }
-        .chip-anxious:hover { background: #f3e5f5; border-color: #8e24aa; }
 
-        .nav-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: var(--secondary);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-bottom: 20px;
+        footer {
+            text-align: center; margin-top: auto; padding: 40px 20px 20px;
+            border-top: 1px solid #ddd; font-size: 0.9rem; color: #7f8c8d;
         }
+        footer a { color: var(--secondary); text-decoration: none; font-weight: 600; }
 
-#scrollTopBtn {
-    display: none; position: fixed; bottom: 20px; right: 30px;
-    background: var(--primary); color: white; border: none;
-    padding: 15px; border-radius: 50%; cursor: pointer;
-}
+        #scrollTopBtn {
+            display: none; position: fixed; bottom: 20px; right: 30px;
+            background: var(--primary); color: white; border: none;
+            padding: 15px; border-radius: 50%; cursor: pointer; z-index: 100;
+        }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="nav-btn">← Back to Form</a>
+    <nav>
+        <a href="readme.html" class="nav-link">README</a>
+        <a href="wireframe.html" class="nav-link">Wireframe</a>
+        <a href="index.html" class="nav-link">← Back to Form</a>
+    </nav>
     
     <h1>Floop Gallery</h1>
     <div class="live-status"><span class="dot"></span> LIVE UPDATES ACTIVE</div>
@@ -115,121 +102,94 @@
 
     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="scrollTopBtn">↑</button>
 
+    <footer>
+        <p>&copy; 2026 Floop! Project | <a href="readme.html">Documentation</a> | <a href="wireframe.html">Wireframe</a></p>
+    </footer>
+
     <script>
-        // 1. MUST UPDATE THIS URL EVERY TIME YOU DEPLOY A "NEW DEPLOYMENT"
+        // UPDATE THIS URL with your actual Apps Script Exec URL
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzAAj22Yw4p5nERryYpOyqb1FougMnIljAaG9AR34lvygLMKZGMI1es6WbX-DP7vm03/exec';
 
-    async function refreshData() {
-        try {
-            const response = await fetch(scriptURL);
-            const data = await response.json();
+        async function refreshData() {
+            try {
+                const response = await fetch(scriptURL);
+                const data = await response.json();
+                const galleryDiv = document.getElementById('gallery');
 
-            const galleryDiv = document.getElementById('gallery');
-
-            // DEBUG: Check if drawings actually exist
-            if (!data.drawings || data.drawings.length === 0) {
-                galleryDiv.innerHTML = "<p style='grid-column: 1/-1;'>No drawings found. Check your Sheet headers!</p>";
-                return;
-            }
-
-            // 2. Build gallery if it's the first load
-            if (galleryDiv.innerHTML.includes('Loading')) {
-                renderGallery(data.drawings);
-            }
-
-           // Inside drawings.reverse().forEach(drawing => { ...
-
-// 1. Grab the raw date from the drawing object
-const rawDate = drawing.Timestamp;
-
-// 2. Try to format it, or provide a fallback if it's invalid
-let displayDate = "Date unknown";
-
-if (rawDate) {
-    const parsedDate = new Date(rawDate);
-    // Check if the date is actually valid before formatting
-    if (!isNaN(parsedDate.getTime())) {
-        displayDate = parsedDate.toLocaleDateString('en-GB', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
-        });
-    }
-}
-
-// 3. Use displayDate in your HTML template
-// <div class="meta">Location: ${drawing.user_postcode} | ${displayDate}</div>
- 
-            // 3. Update Reaction Counts
-            Object.keys(data.reactionCounts).forEach(key => {
-                const countSpan = document.getElementById(`count-${key}`);
-                if (countSpan) {
-                    countSpan.innerText = data.reactionCounts[key];
+                if (!data.drawings || data.drawings.length === 0) {
+                    galleryDiv.innerHTML = "<p style='grid-column: 1/-1;'>No drawings found. Check your Sheet!</p>";
+                    return;
                 }
-            });
-            
-        } catch (error) {
-            console.error("Fetch Error:", error);
-            document.getElementById('gallery').innerHTML = "Error connecting to Google Sheets. Check permissions.";
-        }
-    }
 
-    function renderGallery(drawings) {
-        const gallery = document.getElementById('gallery');
-        gallery.innerHTML = '';
-        
-        // We reverse so the newest feedback appears at the top
-        drawings.reverse().forEach(drawing => {
-            const card = document.createElement('div');
-            card.className = 'feedback-card';
-            
-            // Note: drawing.my_image_data and drawing.user_postcode 
-            // MUST match your spreadsheet column headers exactly.
-            card.innerHTML = `
-                <img src="${drawing.my_image_data}" alt="Feedback Drawing">
-                <div class="meta">Postcode: ${drawing.user_postcode || 'N/A'}</div>
+                // Initial render
+                if (galleryDiv.innerHTML.includes('Loading')) {
+                    renderGallery(data.drawings);
+                }
+
+                // Update reaction counts only
+                Object.keys(data.reactionCounts).forEach(key => {
+                    const countSpan = document.getElementById(`count-${key}`);
+                    if (countSpan) countSpan.innerText = data.reactionCounts[key];
+                });
                 
-                <div class="reaction-bar">
-                    <button class="reaction-chip chip-happy" onclick="sendReaction('${drawing.rowId}', 'happy')">
-                        😊 <span class="reaction-count" id="count-${drawing.rowId}-happy">0</span>
-                    </button>
-                    <button class="reaction-chip chip-sad" onclick="sendReaction('${drawing.rowId}', 'sad')">
-                        😢 <span class="reaction-count" id="count-${drawing.rowId}-sad">0</span>
-                    </button>
-                    <button class="reaction-chip chip-angry" onclick="sendReaction('${drawing.rowId}', 'angry')">
-                        😡 <span class="reaction-count" id="count-${drawing.rowId}-angry">0</span>
-                    </button>
-                    <button class="reaction-chip chip-anxious" onclick="sendReaction('${drawing.rowId}', 'anxious')">
-                        😰 <span class="reaction-count" id="count-${drawing.rowId}-anxious">0</span>
-                    </button>
-                </div>
-            `;
-            gallery.appendChild(card);
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                document.getElementById('gallery').innerHTML = "Error connecting to Google Sheets. Check permissions.";
+            }
+        }
+
+        function renderGallery(drawings) {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+            
+            // Reverse so newest is at top
+            [...drawings].reverse().forEach(drawing => {
+                const card = document.createElement('div');
+                card.className = 'feedback-card';
+                
+                // Date Logic
+                const rawDate = drawing.Timestamp;
+                let displayDate = "Date unknown";
+                if (rawDate) {
+                    const parsedDate = new Date(rawDate);
+                    if (!isNaN(parsedDate.getTime())) {
+                        displayDate = parsedDate.toLocaleDateString('en-GB', {
+                            day: 'numeric', month: 'short', year: 'numeric'
+                        });
+                    }
+                }
+
+                card.innerHTML = `
+                    <img src="${drawing.my_image_data}" alt="Feedback Drawing">
+                    <div class="meta">Location: ${drawing.user_postcode || 'N/A'} | ${displayDate}</div>
+                    <div class="reaction-bar">
+                        <button class="reaction-chip" onclick="sendReaction('${drawing.rowId}', 'happy')">😊 <span id="count-${drawing.rowId}-happy">0</span></button>
+                        <button class="reaction-chip" onclick="sendReaction('${drawing.rowId}', 'sad')">😢 <span id="count-${drawing.rowId}-sad">0</span></button>
+                        <button class="reaction-chip" onclick="sendReaction('${drawing.rowId}', 'angry')">😡 <span id="count-${drawing.rowId}-angry">0</span></button>
+                        <button class="reaction-chip" onclick="sendReaction('${drawing.rowId}', 'anxious')">😰 <span id="count-${drawing.rowId}-anxious">0</span></button>
+                    </div>
+                `;
+                gallery.appendChild(card);
+            });
+        }
+
+        async function sendReaction(entryId, emotion) {
+            const countSpan = document.getElementById(`count-${entryId}-${emotion}`);
+            countSpan.innerText = parseInt(countSpan.innerText) + 1;
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ type: 'reaction', entryId: entryId, emotion: emotion })
+            });
+        }
+
+        refreshData();
+        setInterval(refreshData, 5000);
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('scrollTopBtn').style.display = window.scrollY > 300 ? 'block' : 'none';
         });
-    }
-
-    async function sendReaction(entryId, emotion) {
-        // Optimistic UI update
-        const countSpan = document.getElementById(`count-${entryId}-${emotion}`);
-        countSpan.innerText = parseInt(countSpan.innerText) + 1;
-
-        fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({
-                type: 'reaction',
-                entryId: entryId,
-                emotion: emotion
-            })
-        });
-    }
-
-    // Run on load and every 5 seconds
-    refreshData();
-    setInterval(refreshData, 5000);
-
-    // Show scroll to top button
-    window.addEventListener('scroll', () => {
-        document.getElementById('scrollTopBtn').style.display = window.scrollY > 300 ? 'block' : 'none';
-    });
-</script>
+    </script>
+</body>
+</html>

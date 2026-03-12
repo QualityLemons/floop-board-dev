@@ -1,5 +1,7 @@
 Hi, welcome to Floop!, an activity feedback app from QualityLemons. I have not been a programmer for long, but I have been a business development manager, grant manager, and community activity designer for many years. I hold a level 3 in adult education and training from Dudley College. I am excited to use the skills I am learning to create a simple tool that could eventually be used to create meaningful and simple feedback loops for various activities in the community, including class engagement. 
 
+You can access Floop! as a public page here: 
+
 Floop! as an MVP removes email requirement entirely and feed all images to a separate page where they can be stored and reviewed against postcode data. 
 <div>
 It was built using HTML, CSS, Javascript, with APIs from Google Sheets and EmailJS.

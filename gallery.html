@@ -59,6 +59,24 @@
         // This URL fetches the sheet as a CSV (the easiest way to read public data)
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
+async function sendReaction(entryId, emotion) {
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxcADhS4bHRLcifjslSDCLp3SWNMa-jhV2tywbG9bRolbXYQ4fLwYbrduCBMWr66YlG/exec';    
+    // Update UI immediately (Optimistic UI)
+    const countSpan = document.getElementById(`count-${entryId}-${emotion}`);
+    countSpan.innerText = parseInt(countSpan.innerText) + 1;
+
+    // Send to Google Sheets
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify({
+            type: 'reaction',
+            entryId: entryId,
+            emotion: emotion
+        })
+    });
+}
+
         async function fetchGallery() {
             try {
                 const response = await fetch(url);
@@ -81,9 +99,16 @@
                         const card = document.createElement('div');
                         card.className = 'feedback-card';
                         card.innerHTML = `
-                            <img src="${imageData}" alt="Feedback Drawing">
-                            <div class="meta">Location: ${postcode} | ${new Date(date).toLocaleDateString()}</div>
-                        `;
+    <img src="${imageData}" alt="Feedback Drawing">
+    <div class="meta">Location: ${postcode} | ${new Date(date).toLocaleDateString()}</div>
+    
+    <div class="reaction-bar">
+        <button onclick="sendReaction('${rowId}', 'happy')">😊 <span id="count-${rowId}-happy">0</span></button>
+        <button onclick="sendReaction('${rowId}', 'sad')">😢 <span id="count-${rowId}-sad">0</span></button>
+        <button onclick="sendReaction('${rowId}', 'angry')">😡 <span id="count-${rowId}-angry">0</span></button>
+        <button onclick="sendReaction('${rowId}', 'anxious')">😰 <span id="count-${rowId}-anxious">0</span></button>
+    </div>
+`;
                         gallery.appendChild(card);
                     }
                 });

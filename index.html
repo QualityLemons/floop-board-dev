@@ -19,20 +19,32 @@
             --success: #27ae60;
             --danger: #e74c3c;
             --light: #f4f7f6;
+            --text: #333;
+            --card-bg: white;
+        }
+
+        /* Dark Mode variables override */
+        body.dark-theme {
+            --primary: #ecf0f1;
+            --light: #121212;
+            --text: #e0e0e0;
+            --card-bg: #1e1e1e;
         }
 
         body { 
             font-family: 'Segoe UI', system-ui, sans-serif; 
             line-height: 1.6; 
-            color: #333; 
+            color: var(--text); 
             max-width: 900px; 
             margin: 0 auto; 
             padding: 20px; 
             background-color: var(--light); 
+            transition: background-color 0.3s, color 0.3s;
         }
 
-       nav { text-align: right; margin-bottom: 20px; }
-        .wireframe-link {
+        /* Navigation Links */
+        nav { text-align: right; margin-bottom: 10px; }
+        .nav-link {
             display: inline-block;
             color: var(--secondary);
             text-decoration: none;
@@ -41,19 +53,25 @@
             padding: 8px 16px;
             border-radius: 8px;
             transition: all 0.3s ease;
-        } 
-        nav { text-align: right; margin-bottom: 20px; }
-        .gallery-link {
-            display: inline-block;
-            color: var(--secondary);
-            text-decoration: none;
-            font-weight: 600;
-            border: 2px solid var(--secondary);
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            margin-left: 10px;
         }
-        .gallery-link:hover { background-color: var(--secondary); color: white; }
+        .nav-link:hover { background-color: var(--secondary); color: white; }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary);
+            color: var(--light);
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
 
         header { text-align: center; margin-bottom: 40px; }
         h1 { color: var(--primary); font-size: 3.5rem; margin-bottom: 0; }
@@ -67,211 +85,25 @@
         }
 
         .card { 
-            background: white; 
+            background: var(--card-bg); 
             padding: 25px; 
             border-radius: 12px; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
         }
 
         .form-container { 
-            background: white; 
+            background: var(--card-bg); 
             padding: 40px; 
             border-radius: 15px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
         }
 
         .input-group { margin-bottom: 20px; }
-        label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
-        input { 
+        label { display: block; font-weight: 600; margin-bottom: 8px; }
+        input[type="email"], input[type="text"] { 
             width: 100%; 
             padding: 12px; 
-            border: 2px solid #ddd; 
+            border: 1px solid #ddd; 
             border-radius: 8px; 
-            box-sizing: border-box; 
             transition: border-color 0.3s;
         }
-        input:focus { border-color: var(--secondary); outline: none; }
-
-        .canvas-area { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            margin-top: 20px;
-        }
-        
-        canvas { 
-            border: 2px solid var(--primary); 
-            background: #fff; 
-            cursor: crosshair; 
-            touch-action: none; 
-            border-radius: 8px;
-            max-width: 100%;
-        }
-
-        .controls { 
-            margin-top: 20px; 
-            display: flex; 
-            gap: 15px; 
-            width: 100%;
-            justify-content: center;
-        }
-
-        button { 
-            padding: 15px 30px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 1rem;
-            transition: all 0.2s; 
-        }
-
-        .clear-btn { background: #ecf0f1; color: var(--primary); }
-        .send-btn { background: var(--success); color: white; flex-grow: 1; max-width: 300px; }
-        button:hover { transform: translateY(-2px); opacity: 0.9; }
-        button:disabled { background: #bdc3c7; cursor: not-allowed; }
-    </style>
-</head>
-<body>
-
-<nav style="text-align: right; margin-bottom: 20px;">
-    <a href="gallery.html" class="gallery-link" target="_blank" rel="noopener">View Feedback Gallery →</a>
-</nav>
-<nav style="text-align: right; margin-bottom: 20px;">
-    <a href="wireframe.html" class-"wireframe-link" target="_blank" rel="noopener" class="gallery-link">View Wireframe →</a>
-</nav>
-
-    <header>
-        <h1>Floop!</h1>
-        <h2>Welcome to the future of good feedback</h2>
-    </header>
-
-    <div class="info-grid">
-        <div class="card">
-            <h3>What is Floop?</h3>      
-            <p>A tool to support children and young people to give feedback at their own pace.</p>
-        </div>
-        <div class="card">
-            <h3>Why use Floop?</h3>
-            <p>Visual expression for thoughts that words sometimes can't capture.</p>
-        </div>
-        <div class="card">
-            <h3>Your Privacy</h3>
-            <p>Only your postcode is required to help us understand where feedback comes from.</p>
-        </div>
-    </div>
-
-    <div class="form-container">
-        <div class="input-group">
-            <label for="userEmail">Email Address (Optional)</label>
-            <input type="email" id="userEmail" placeholder="email@example.com">
-        </div>
-        
-        <div class="input-group">
-            <label for="userPostcode">Postcode *</label>
-            <input type="text" id="userPostcode" placeholder="e.g. SW1A 1AA" required>
-        </div>
-
-        <div class="canvas-area">
-            <label>Draw your feedback below *</label>
-            <canvas id="paintCanvas" width="600" height="350"></canvas>
-            
-            <div class="controls">
-                <button type="button" class="clear-btn" onclick="clearCanvas()">Clear Canvas</button>
-                <button type="button" id="sendBtn" class="send-btn" onclick="sendEmail()">Submit Feedback</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const canvas = document.getElementById('paintCanvas');
-        const ctx = canvas.getContext('2d');
-        const btn = document.getElementById('sendBtn');
-        let drawing = false;
-
-        function initCanvas() {
-            ctx.fillStyle = "white";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.lineWidth = 4;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#2c3e50';
-        }
-        initCanvas();
-
-        function getPosition(e) {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return { x: clientX - rect.left, y: clientY - rect.top };
-        }
-
-        function startPosition(e) {
-            drawing = true;
-            const pos = getPosition(e);
-            ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
-        }
-
-        function finishedPosition() { drawing = false; }
-        
-        function draw(e) {
-            if (!drawing) return;
-            e.preventDefault();
-            const pos = getPosition(e);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-        }
-
-        function clearCanvas() { ctx.fillRect(0, 0, canvas.width, canvas.height); }
-
-        async function sendEmail() {
-            const email = document.getElementById('userEmail').value;
-            const postcode = document.getElementById('userPostcode').value;
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzYaUCZ52geM85ixdImubfE5EGWdYEoX-MHdmknQQuSpIgfhBCWdWXR_tyLXs3q1LJi/exec'; 
-
-            // Validation: Only postcode is now mandatory
-            if (!postcode) {
-                alert("Please enter your postcode to submit feedback.");
-                return;
-            }
-
-            btn.innerText = "Sending...";
-            btn.disabled = true;
-
-            const base64Image = canvas.toDataURL('image/png');
-            const templateParams = {
-                user_email: email || "Not Provided", // Send "Not Provided" if empty
-                user_postcode: postcode,
-                my_image_data: base64Image 
-            };
-
-            try {
-                const emailPromise = emailjs.send("service_66hht0i", "template_a745g4m", templateParams);
-                const sheetPromise = fetch(scriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors', 
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(templateParams)
-                });
-
-                await Promise.all([emailPromise, sheetPromise]);
-
-                alert('Success! Taking you to the gallery now...');
-                window.location.href = 'gallery.html'; 
-
-            } catch (error) {
-                alert('Oops! Something went wrong: ' + error);
-                btn.innerText = "Submit Feedback";
-                btn.disabled = false;
-            }
-        }
-
-        canvas.addEventListener('mousedown', startPosition);
-        canvas.addEventListener('mouseup', finishedPosition);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('touchstart', startPosition);
-        canvas.addEventListener('touchend', finishedPosition);
-        canvas.addEventListener('touchmove', draw);
-    </script>
-</body>
-</html>

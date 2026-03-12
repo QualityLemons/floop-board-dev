@@ -59,6 +59,68 @@
         // This URL fetches the sheet as a CSV (the easiest way to read public data)
         const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSuTXZ0e4aC_8P0Z9TngSX_xqf2EF7GGf6AI-cGBlVQ7bVHfrK_17EaHWtUoe_IAYQQZ6UgG9UbwQpu/pubhtml`;
 
+// URL of your deployed Google Apps Script
+const scriptURL = 'YOUR_DEPLOYED_WEB_APP_URL';
+
+async function refreshData() {
+    try {
+        const response = await fetch(scriptURL);
+        const data = await response.json();
+
+        // 1. If it's the first load, build the gallery
+        if (document.getElementById('gallery').innerHTML.includes('Loading')) {
+            renderGallery(data.drawings);
+        }
+
+        // 2. Always update the reaction counts
+        Object.keys(data.reactionCounts).forEach(key => {
+            // key looks like "2-happy"
+            const countSpan = document.getElementById(`count-${key}`);
+            if (countSpan) {
+                countSpan.innerText = data.reactionCounts[key];
+            }
+        });
+        
+    } catch (error) {
+        console.error("Refresh failed:", error);
+    }
+}
+
+// Initial load
+refreshData();
+
+// Refresh counts every 5 seconds (5000 milliseconds)
+setInterval(refreshData, 5000);
+
+function renderGallery(drawings) {
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
+    
+    drawings.reverse().forEach(drawing => {
+        const card = document.createElement('div');
+        card.className = 'feedback-card';
+        card.innerHTML = `
+            <img src="${drawing.my_image_data}">
+            <div class="meta">${drawing.user_postcode}</div>
+            <div class="reaction-bar">
+                <button class="reaction-chip chip-happy" onclick="sendReaction('${drawing.rowId}', 'happy')">
+                    😊 <span class="reaction-count" id="count-${drawing.rowId}-happy">0</span>
+                </button>
+                <button class="reaction-chip chip-sad" onclick="sendReaction('${drawing.rowId}', 'sad')">
+                    😢 <span class="reaction-count" id="count-${drawing.rowId}-sad">0</span>
+                </button>
+                <button class="reaction-chip chip-angry" onclick="sendReaction('${drawing.rowId}', 'angry')">
+                    😡 <span class="reaction-count" id="count-${drawing.rowId}-angry">0</span>
+                </button>
+                <button class="reaction-chip chip-anxious" onclick="sendReaction('${drawing.rowId}', 'anxious')">
+                    😰 <span class="reaction-count" id="count-${drawing.rowId}-anxious">0</span>
+                </button>
+            </div>
+        `;
+        gallery.appendChild(card);
+    });
+}
+
 async function sendReaction(entryId, emotion) {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxt-K2R8ErsBOJ8TqHKDvbdeI1fN-4Bz_d42xMgHvJBkqao0ET0ZegSiMEma22SneX6/exec';    
     // Update UI immediately (Optimistic UI)

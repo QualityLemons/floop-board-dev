@@ -116,54 +116,97 @@
     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="scrollTopBtn">↑</button>
 
     <script>
-        // Update this with your actual Web App URL
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxt-K2R8ErsBOJ8TqHKDvbdeI1fN-4Bz_d42xMgHvJBkqao0ET0ZegSiMEma22SneX6/exec';
+        // 1. MUST UPDATE THIS URL EVERY TIME YOU DEPLOY A "NEW DEPLOYMENT"
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzAAj22Yw4p5nERryYpOyqb1FougMnIljAaG9AR34lvygLMKZGMI1es6WbX-DP7vm03/exec';
 
     async function refreshData() {
         try {
             const response = await fetch(scriptURL);
             const data = await response.json();
-            
-            console.log("Data received from Sheet:", data); // <-- ADD THIS LINE
 
-            if (data.drawings.length === 0) {
-                document.getElementById('gallery').innerText = "No drawings found in the sheet yet!";
+            const galleryDiv = document.getElementById('gallery');
+
+            // DEBUG: Check if drawings actually exist
+            if (!data.drawings || data.drawings.length === 0) {
+                galleryDiv.innerHTML = "<p style='grid-column: 1/-1;'>No drawings found. Check your Sheet headers!</p>";
                 return;
             }
 
-            displayGallery(data.drawings);
+            // 2. Build gallery if it's the first load
+            if (galleryDiv.innerHTML.includes('Loading')) {
+                renderGallery(data.drawings);
+            }
+
+            // 3. Update Reaction Counts
+            Object.keys(data.reactionCounts).forEach(key => {
+                const countSpan = document.getElementById(`count-${key}`);
+                if (countSpan) {
+                    countSpan.innerText = data.reactionCounts[key];
+                }
+            });
+            
         } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error("Fetch Error:", error);
+            document.getElementById('gallery').innerHTML = "Error connecting to Google Sheets. Check permissions.";
         }
     }
 
-    function displayGallery(data) {
+    function renderGallery(drawings) {
         const gallery = document.getElementById('gallery');
         gallery.innerHTML = '';
-        if (data && data.length > 0) {
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'feedback-card';
-                card.innerHTML = `
-                    <img src="${item.imageUrl}" alt="Feedback">
-                    <p class="meta">Submitted: ${new Date(item.timestamp).toLocaleDateString()}</p>
-                    <div class="reaction-bar">
-                        <button class="reaction-chip chip-happy">😊 Happy</button>
-                        <button class="reaction-chip chip-sad">😢 Sad</button>
-                        <button class="reaction-chip chip-angry">😠 Angry</button>
-                        <button class="reaction-chip chip-anxious">😰 Anxious</button>
-                    </div>
-                `;
-                gallery.appendChild(card);
-            });
-        }
+        
+        // We reverse so the newest feedback appears at the top
+        drawings.reverse().forEach(drawing => {
+            const card = document.createElement('div');
+            card.className = 'feedback-card';
+            
+            // Note: drawing.my_image_data and drawing.user_postcode 
+            // MUST match your spreadsheet column headers exactly.
+            card.innerHTML = `
+                <img src="${drawing.my_image_data}" alt="Feedback Drawing">
+                <div class="meta">Postcode: ${drawing.user_postcode || 'N/A'}</div>
+                
+                <div class="reaction-bar">
+                    <button class="reaction-chip chip-happy" onclick="sendReaction('${drawing.rowId}', 'happy')">
+                        😊 <span class="reaction-count" id="count-${drawing.rowId}-happy">0</span>
+                    </button>
+                    <button class="reaction-chip chip-sad" onclick="sendReaction('${drawing.rowId}', 'sad')">
+                        😢 <span class="reaction-count" id="count-${drawing.rowId}-sad">0</span>
+                    </button>
+                    <button class="reaction-chip chip-angry" onclick="sendReaction('${drawing.rowId}', 'angry')">
+                        😡 <span class="reaction-count" id="count-${drawing.rowId}-angry">0</span>
+                    </button>
+                    <button class="reaction-chip chip-anxious" onclick="sendReaction('${drawing.rowId}', 'anxious')">
+                        😰 <span class="reaction-count" id="count-${drawing.rowId}-anxious">0</span>
+                    </button>
+                </div>
+            `;
+            gallery.appendChild(card);
+        });
     }
+
+    async function sendReaction(entryId, emotion) {
+        // Optimistic UI update
+        const countSpan = document.getElementById(`count-${entryId}-${emotion}`);
+        countSpan.innerText = parseInt(countSpan.innerText) + 1;
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({
+                type: 'reaction',
+                entryId: entryId,
+                emotion: emotion
+            })
+        });
+    }
+
+    // Run on load and every 5 seconds
+    refreshData();
+    setInterval(refreshData, 5000);
 
     // Show scroll to top button
     window.addEventListener('scroll', () => {
         document.getElementById('scrollTopBtn').style.display = window.scrollY > 300 ? 'block' : 'none';
     });
-
-    // Initial load
-    refreshData();
-    </script>
+</script>

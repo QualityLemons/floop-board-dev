@@ -9,29 +9,19 @@
     transition: all 0.3s ease;
 }
 
+@media (max-width: 600px) {
+    #scrollTopBtn {
+        right: 15px;
+        bottom: 15px;
+        padding: 12px;
+    }
+}
+
+:root {
+    --secondary: #3498db; /* The Floop! Blue */
+}
+
 .gallery-link:hover {
     background-color: var(--secondary);
     color: white;
-}
-#scrollTopBtn {
-    display: none; /* Hidden by default */
-    position: fixed; /* Fixed position */
-    bottom: 20px; /* 20px from bottom */
-    right: 30px; /* 30px from right */
-    z-index: 99; /* Sit on top of other elements */
-    border: none;
-    outline: none;
-    background-color: var(--secondary, #3498db); /* Uses your theme color */
-    color: white;
-    cursor: pointer;
-    padding: 15px;
-    border-radius: 50%; /* Circular button */
-    font-size: 18px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transition: opacity 0.3s, transform 0.2s;
-}
-
-#scrollTopBtn:hover {
-    transform: scale(1.1);
-    background-color: #2980b9;
 }

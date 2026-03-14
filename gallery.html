@@ -148,11 +148,20 @@
     const ctx = canvas.getContext('2d');
     let drawing = false;
 
-    // Set canvas internal resolution to match display size
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    ctx.strokeStyle = "#3498db"; // Different color for reactions!
-    ctx.lineWidth = 2;
+    const resizeCanvas = () => {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#3498db';
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    };
+
+    // Ensure the canvas matches its displayed size (important for accurate dataURL capture)
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     const getPos = (e) => {
         const rect = canvas.getBoundingClientRect();
@@ -161,20 +170,39 @@
         return { x: clientX - rect.left, y: clientY - rect.top };
     };
 
-    canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
-    canvas.addEventListener('mousemove', (e) => {
+    const start = (e) => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); };
+    const stop = () => drawing = false;
+    const draw = (e) => {
         if (!drawing) return;
         const p = getPos(e);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
-    });
-    window.addEventListener('mouseup', () => drawing = false);
+    };
+
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('touchstart', start);
+    window.addEventListener('mouseup', stop);
+    window.addEventListener('touchend', stop);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchmove', draw);
+}
+
+function isCanvasBlank(canvas) {
+    const blank = document.createElement('canvas');
+    blank.width = canvas.width;
+    blank.height = canvas.height;
+    return canvas.toDataURL() === blank.toDataURL();
 }
 
 async function submitReaction(canvasId, originalRowId) {
     const canvas = document.getElementById(canvasId);
+
+    if (isCanvasBlank(canvas)) {
+        alert('Please draw something before posting a reaction.');
+        return;
+    }
+
     const reactionData = canvas.toDataURL('image/png');
-    
     const btn = canvas.nextElementSibling;
     btn.innerText = "Saving...";
     btn.disabled = true;
@@ -186,15 +214,29 @@ async function submitReaction(canvasId, originalRowId) {
     };
 
     try {
-        await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        const response = await fetch(scriptURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            mode: 'cors'        // <- important
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
         alert("Reaction posted!");
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    } catch (e) {
+        console.error('Reaction error:', e);
+        alert("Could not post reaction (possibly due to CORS). It is saved locally for retry.");
+
+        const stored = JSON.parse(localStorage.getItem('floop_reactions') || '[]');
+        stored.push({ originalId: originalRowId, reaction_image: reactionData, createdAt: new Date().toISOString() });
+        localStorage.setItem('floop_reactions', JSON.stringify(stored));
+    } finally {
         btn.innerText = "Post Reaction";
         btn.disabled = false;
-        // Clear the canvas after successful post
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    } catch (e) {
-        alert("Error saving reaction.");
     }
 }
 
@@ -253,6 +295,36 @@ async function submitReaction(canvasId, originalRowId) {
 
         refreshData();
         setInterval(refreshData, 10000); // Check every 10s now that reactions are gone
+
+        // Retry any locally stored reactions (saved when the network/server refused a post)
+        async function retryStoredReactions() {
+            const stored = JSON.parse(localStorage.getItem('floop_reactions') || '[]');
+            if (!stored.length) return;
+
+            const remaining = [];
+            for (const item of stored) {
+                try {
+                    const response = await fetch(scriptURL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'reaction_draw', ...item }),
+                        mode: 'cors'
+                    });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                } catch (e) {
+                    console.warn('Retry failed:', e);
+                    remaining.push(item);
+                }
+            }
+
+            if (remaining.length) {
+                localStorage.setItem('floop_reactions', JSON.stringify(remaining));
+            } else {
+                localStorage.removeItem('floop_reactions');
+            }
+        }
+
+        retryStoredReactions();
 
         window.addEventListener('scroll', () => {
             document.getElementById('scrollTopBtn').style.display = window.scrollY > 300 ? 'block' : 'none';

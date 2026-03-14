@@ -247,12 +247,12 @@
                             // GitHub Pages (static hosting) cannot handle POST routes
                             console.warn('Submit endpoint returned non-OK response:', response.status);
                             saveFeedbackLocally(payload);
-                            alert('Could not send feedback to server. Your drawing was saved locally in the browser.');
+                            alert('Feedback saved locally! (Server not available on static hosting)');
                         }
                     } catch (error) {
                         console.error('Error:', error);
                         saveFeedbackLocally(payload);
-                        alert('Failed to submit feedback to the server. Your drawing was saved locally in the browser.');
+                        alert('Feedback saved locally! (Unable to reach server)');
                     } finally {
                         btn.innerText = "Submit";
                         btn.disabled = false;

@@ -3,142 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback Sandbox v2.0</title>
+    <title>Feedback Sandbox | Project Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-slate-50 p-8">
+<body class="bg-slate-50 text-slate-900 font-sans selection:bg-indigo-100">
 
-    <div id="root"></div>
+    <header class="max-w-4xl mx-auto pt-20 pb-12 px-6">
+        <h1 class="text-5xl font-black tracking-tight text-slate-900 mb-4">
+            FloatJet <span class="text-indigo-600"></span>
+        </h1>
+        <p class="text-xl text-slate-600 leading-relaxed max-w-2xl">
+            A collection of lightweight, experimental tools designed to help young people and adults share their thoughts in creative, low-pressure ways.
+        </p>
+    </header>
 
-    <script type="text/babel">
-        const { useState, useRef, useEffect } = React;
+    <main class="max-w-4xl mx-auto px-6 pb-20">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <a href="TotesEmote.html" class="group block p-6 bg-white border-2 border-slate-200 rounded-2xl hover:border-indigo-500 hover:shadow-xl transition-all duration-300">
+                <div class="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">🤩</div>
+                <h3 class="text-xl font-bold mb-2 group-hover:text-indigo-600">Totes Emote</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                    A quick, non-verbal way for users to express their current mood using intuitive emojis.
+                </p>
+                <div class="mt-4 text-xs font-bold text-indigo-500 uppercase tracking-widest">Open Tool →</div>
+            </a>
 
-        // --- 1. The Container (from our previous step) ---
-        const ToolContainer = ({ title, description, children, onReset }) => (
-            <div className="max-w-xl mx-auto border-2 border-slate-100 rounded-xl p-6 bg-white shadow-sm mb-8">
-                <div className="mb-6 border-b border-slate-50 pb-4">
-                    <h3 className="text-xl font-bold text-slate-800">{title}</h3>
-                    <p className="text-sm text-slate-500 mt-1">{description}</p>
+            <a href="Drawback.html" class="group block p-6 bg-white border-2 border-slate-200 rounded-2xl hover:border-indigo-500 hover:shadow-xl transition-all duration-300">
+                <div class="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">🎨</div>
+                <h3 class="text-xl font-bold mb-2 group-hover:text-indigo-600">Drawback</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                    A minimalist drawing tool with a limited palette, perfect for visual storytelling and abstract feedback.
+                </p>
+                <div class="mt-4 text-xs font-bold text-indigo-500 uppercase tracking-widest">Open Tool →</div>
+            </a>
+
+            <div class="p-6 bg-slate-100 border-2 border-dashed border-slate-300 rounded-2xl opacity-60">
+                <div class="text-4xl mb-4">✍️</div>
+                <h3 class="text-xl font-bold mb-2 text-slate-400">Reflection Box</h3>
+                <p class="text-slate-400 text-sm italic">Coming soon: A structured text prompt for deeper insights.</p>
+            </div>
+
+        </div>
+
+        <hr class="my-16 border-slate-200" />
+
+        <section class="prose prose-slate max-w-none">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">About the Project</h2>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h4 class="font-bold text-indigo-600 uppercase text-xs tracking-widest mb-2">The Mission</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Traditional feedback forms can be intimidating. This toolkit explores modular "micro-interactions" that make giving feedback feel like a natural part of a conversation.
+                    </p>
                 </div>
-                <div className="tool-content min-h-[150px] flex items-center justify-center bg-slate-50 rounded-lg p-4">
-                    {children}
-                </div>
-                <div className="mt-6 flex justify-end gap-3">
-                    <button onClick={onReset} className="px-4 py-2 text-sm text-slate-400 hover:text-slate-600">
-                        Clear Canvas
-                    </button>
+                <div>
+                    <h4 class="font-bold text-indigo-600 uppercase text-xs tracking-widest mb-2">Design Principles</h4>
+                    <ul class="text-slate-600 text-sm space-y-2 list-disc pl-4">
+                        <li>Low cognitive load</li>
+                        <li>Mobile-first interaction</li>
+                        <li>Accessible and inclusive design</li>
+                    </ul>
                 </div>
             </div>
-        );
+        </section>
+    </main>
 
-        // --- 2. The Drawing Tool ---
-        const DrawingCanvas = () => {
-            const canvasRef = useRef(null);
-            const contextRef = useRef(null);
-            const [isDrawing, setIsDrawing] = useState(false);
-            const [activeColor, setActiveColor] = useState('#0f172a');
+    <footer class="text-center pb-10 text-slate-400 text-xs tracking-widest uppercase">
+        &copy; 2026 FloatJet. All rights reserved. | <a href="index.html" class="text-indigo-500 hover:underline">Home</a>
+    </footer>
 
-            const colors = [
-                { name: 'Blue', value: '#3b82f6' },
-                { name: 'Yellow', value: '#eab308' },
-                { name: 'Orange', value: '#f97316' },
-                { name: 'Black', value: '#0f172a' }
-            ];
-
-            useEffect(() => {
-                const canvas = canvasRef.current;
-                canvas.width = canvas.offsetWidth * 2;
-                canvas.height = canvas.offsetHeight * 2;
-                const context = canvas.getContext('2d');
-                context.scale(2, 2);
-                context.lineCap = 'round';
-                context.lineWidth = 5;
-                context.strokeStyle = activeColor;
-                contextRef.current = context;
-            }, []);
-
-            useEffect(() => {
-                if (contextRef.current) contextRef.current.strokeStyle = activeColor;
-            }, [activeColor]);
-
-            const getCoords = (e) => {
-                const canvas = canvasRef.current;
-                const rect = canvas.getBoundingClientRect();
-                const event = e.touches ? e.touches[0] : e;
-                return {
-                    x: (event.clientX || e.nativeEvent.offsetX + rect.left) - rect.left,
-                    y: (event.clientY || e.nativeEvent.offsetY + rect.top) - rect.top
-                };
-            };
-
-            const start = (e) => {
-                const { x, y } = getCoords(e);
-                contextRef.current.beginPath();
-                contextRef.current.moveTo(x, y);
-                setIsDrawing(true);
-            };
-
-            const draw = (e) => {
-                if (!isDrawing) return;
-                const { x, y } = getCoords(e);
-                contextRef.current.lineTo(x, y);
-                contextRef.current.stroke();
-            };
-
-            const stop = () => {
-                contextRef.current.closePath();
-                setIsDrawing(false);
-            };
-
-            const clear = () => {
-                const context = canvasRef.current.getContext('2d');
-                context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            };
-
-            return (
-                <ToolContainer 
-                    title="Visual Feedback" 
-                    description="Draw how you feel or sketch an idea."
-                    onReset={clear}
-                >
-                    <div className="w-full flex flex-col gap-4">
-                        <canvas 
-                            ref={canvasRef}
-                            onMouseDown={start} onMouseMove={draw} onMouseUp={stop} onMouseLeave={stop}
-                            onTouchStart={start} onTouchMove={draw} onTouchEnd={stop}
-                            className="w-full h-64 bg-white border rounded cursor-crosshair touch-none"
-                        />
-                        <div className="flex gap-3">
-                            {colors.map(c => (
-                                <button 
-                                    key={c.name}
-                                    onClick={() => setActiveColor(c.value)}
-                                    className={`w-10 h-10 rounded-full border-4 transition-all ${activeColor === c.value ? 'border-slate-300 scale-110' : 'border-transparent'}`}
-                                    style={{ backgroundColor: c.value }}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </ToolContainer>
-            );
-        };
-
-        // --- 3. Render the App ---
-        const App = () => (
-            <div className="container mx-auto">
-                <header className="text-center my-12">
-                    <h1 className="text-3xl font-bold text-slate-900">Feedback Sandbox</h1>
-                    <p className="text-slate-500">Version 2.0 (Lightweight Edition)</p>
-                </header>
-                <DrawingCanvas />
-            </div>
-        );
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
 </body>
 </html>

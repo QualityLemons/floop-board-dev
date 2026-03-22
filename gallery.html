@@ -3,64 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback Gallery</title>
+    <title>Drawback Gallery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-slate-50 p-8">
+<body class="bg-slate-50 p-6 md:p-12">
 
     <div id="root"></div>
 
     <script type="text/babel">
-        const Gallery = () => {
-            const [drawings, setDrawings] = React.useState([]);
+        const { useState, useEffect } = React;
 
-            React.useEffect(() => {
-                // Load drawings from local storage
-                const savedData = JSON.parse(localStorage.getItem('sandbox-gallery') || '[]');
-                setDrawings(savedData);
+        const Gallery = () => {
+            const [drawings, setDrawings] = useState([]);
+
+            // Load from LocalStorage on mount
+            useEffect(() => {
+                const data = localStorage.getItem('sandbox-gallery');
+                if (data) {
+                    setDrawings(JSON.parse(data));
+                }
             }, []);
 
-            const clearGallery = () => {
-                if(confirm("Clear all drawings?")) {
+            const handleClear = () => {
+                if (window.confirm("Delete all drawings in the gallery?")) {
                     localStorage.removeItem('sandbox-gallery');
                     setDrawings([]);
                 }
             };
 
             return (
-                <div className="max-w-6xl mx-auto">
-                    <header className="flex justify-between items-end mb-12">
-                        <div>
-                            <a href="index.html" className="text-indigo-600 font-bold text-sm uppercase tracking-widest">← Back to Hub</a>
-                            <h1 className="text-4xl font-black text-slate-900 mt-2">Community Gallery</h1>
-                        </div>
-                        <button onClick={clearGallery} className="text-xs text-red-400 hover:text-red-600 font-bold uppercase tracking-widest">
-                            Clear Gallery
+                <div className="max-w-5xl mx-auto">
+                    {/* Header Nav */}
+                    <nav className="flex justify-between items-center mb-10">
+                        <a href="index.html" className="text-indigo-600 font-bold hover:underline">
+                            ← Back to Hub
+                        </a>
+                        <button 
+                            onClick={handleClear}
+                            className="text-xs font-black text-red-400 hover:text-red-600 uppercase tracking-widest"
+                        >
+                            Clear All
                         </button>
+                    </nav>
+
+                    <header className="mb-12">
+                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Community Gallery</h1>
+                        <p className="text-slate-500 mt-2">Visual feedback collected via Drawback.</p>
                     </header>
 
                     {drawings.length === 0 ? (
                         <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                            <p className="text-slate-400 text-lg">No drawings yet. Go be the first!</p>
-                            <a href="canvas-tool.html" className="mt-4 inline-block px-6 py-2 bg-indigo-600 text-white rounded-full font-bold">Start Drawing</a>
+                            <p className="text-slate-400 mb-6 text-lg font-medium">The gallery is currently empty.</p>
+                            <a 
+                                href="Drawback.html" 
+                                className="px-8 py-3 bg-indigo-600 text-white rounded-full font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all"
+                            >
+                                Start a new Drawback
+                            </a>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {drawings.map((item) => (
-                                <div key={item.id} className="sandbox-card overflow-hidden !p-0">
-                                    <img src={item.image} alt="User drawing" className="w-full h-auto bg-slate-50 border-b border-slate-100" />
-                                    <div className="p-4 flex justify-between items-center bg-white">
-                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{item.date}</span>
-                                        <div className="flex gap-2 text-xl">🎨</div>
+                                <div key={item.id} className="sandbox-card !p-0 overflow-hidden animate-in">
+                                    <div className="aspect-square bg-white flex items-center justify-center border-b border-slate-100">
+                                        <img 
+                                            src={item.image} 
+                                            alt="User Feedback" 
+                                            className="max-w-full max-h-full object-contain"
+                                        />
+                                    </div>
+                                    <div className="p-4 bg-white flex justify-between items-center">
+                                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">
+                                            {item.date}
+                                        </span>
+                                        <span className="text-indigo-200">🎨</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     )}
+
+                    <footer className="mt-20 text-center border-t border-slate-200 pt-10">
+                        <p className="text-slate-400 text-xs tracking-widest uppercase">End of Gallery</p>
+                    </footer>
                 </div>
             );
         };

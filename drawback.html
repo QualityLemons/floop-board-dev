@@ -40,36 +40,30 @@
             </div>
         );
 
-        // --- 2. EMOJI FEEDBACK TOOL ---
-        const EmojiTool = () => {
-            const [rating, setRating] = useState(null);
-            const emojis = ['😢', '😐', '😊', '🤩'];
-
-            return (
-                <ToolContainer 
-                    title="How are you feeling?" 
-                    description="A quick sentiment check for younger users."
-                    onReset={() => setRating(null)}
-                >
-                    <div className="flex gap-6 text-5xl">
-                        {emojis.map((emoji) => (
-                            <button 
-                                key={emoji} 
-                                onClick={() => setRating(emoji)}
-                                className={`transition-all duration-300 transform hover:scale-110 ${
-                                    rating === emoji ? "grayscale-0 scale-125 drop-shadow-lg" : "grayscale opacity-30 hover:opacity-60"
-                                }`}
-                            >
-                                {emoji}
-                            </button>
-                        ))}
-                    </div>
-                    {rating && <p className="mt-4 text-slate-400 text-sm font-medium">Captured: {rating}</p>}
-                </ToolContainer>
-            );
-        };
-
         // --- 3. DRAWING CANVAS TOOL ---
+      const submitDrawing = () => {
+    const canvas = canvasRef.current;
+    // 1. Convert canvas to a small image string
+    const imageData = canvas.toDataURL('image/png');
+    
+    // 2. Get existing gallery from local storage (or start empty)
+    const existingGallery = JSON.parse(localStorage.getItem('sandbox-gallery') || '[]');
+    
+    // 3. Add new drawing with a timestamp
+    const newEntry = {
+        id: Date.now(),
+        image: imageData,
+        date: new Date().toLocaleDateString()
+    };
+    
+    const updatedGallery = [newEntry, ...existingGallery];
+    
+    // 4. Save back to local storage
+    localStorage.setItem('sandbox-gallery', JSON.stringify(updatedGallery));
+    
+    alert("Drawing saved to gallery!");
+    window.location.href = 'gallery.html'; // Redirect to see the result
+};  
         const DrawingCanvas = () => {
             const canvasRef = useRef(null);
             const contextRef = useRef(null);

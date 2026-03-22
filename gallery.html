@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-slate-50 p-8">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const Gallery = () => {
+            const [drawings, setDrawings] = React.useState([]);
+
+            React.useEffect(() => {
+                // Load drawings from local storage
+                const savedData = JSON.parse(localStorage.getItem('sandbox-gallery') || '[]');
+                setDrawings(savedData);
+            }, []);
+
+            const clearGallery = () => {
+                if(confirm("Clear all drawings?")) {
+                    localStorage.removeItem('sandbox-gallery');
+                    setDrawings([]);
+                }
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto">
+                    <header className="flex justify-between items-end mb-12">
+                        <div>
+                            <a href="index.html" className="text-indigo-600 font-bold text-sm uppercase tracking-widest">← Back to Hub</a>
+                            <h1 className="text-4xl font-black text-slate-900 mt-2">Community Gallery</h1>
+                        </div>
+                        <button onClick={clearGallery} className="text-xs text-red-400 hover:text-red-600 font-bold uppercase tracking-widest">
+                            Clear Gallery
+                        </button>
+                    </header>
+
+                    {drawings.length === 0 ? (
+                        <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+                            <p className="text-slate-400 text-lg">No drawings yet. Go be the first!</p>
+                            <a href="canvas-tool.html" className="mt-4 inline-block px-6 py-2 bg-indigo-600 text-white rounded-full font-bold">Start Drawing</a>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {drawings.map((item) => (
+                                <div key={item.id} className="sandbox-card overflow-hidden !p-0">
+                                    <img src={item.image} alt="User drawing" className="w-full h-auto bg-slate-50 border-b border-slate-100" />
+                                    <div className="p-4 flex justify-between items-center bg-white">
+                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{item.date}</span>
+                                        <div className="flex gap-2 text-xl">🎨</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Gallery />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+/* ==========================================
+   FEEDBACK SANDBOX: GLOBAL STYLES
+   ========================================== */
+
+:root {
+  --primary: #4f46e5; /* Indigo */
+  --bg-subtle: #f8fafc; /* Slate 50 */
+}
+
+/* 1. Global Smoothing */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-feature-settings: "cv02", "cv03", "cv04"; /* Makes UI fonts cleaner */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 2. Mobile Protection */
+/* Prevents the 'pull-to-refresh' gesture on touch devices while drawing */
+.touch-none {
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+/* 3. Custom Slate Scrollbars (Cleaner than default browser bars) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* slate-300 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; /* slate-400 */
+}
+
+/* 4. Interactive Feedback Tool states */
+.tool-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-2px);
+}
+
+/* 5. Natural Cursors for Feedback Tools */
+.cursor-draw {
+  cursor: crosshair; /* Great for the canvas tool */
+}
+
+.cursor-pointer-hover button:hover {
+  cursor: pointer;
+}

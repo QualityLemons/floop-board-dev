@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projector</title>
- <header class="max-w-4xl mx-auto pt-20 pb-12 px-6">
-        <h1 class="text-5xl font-black tracking-tight text-slate-900 mb-4">
-            Projector<span class="text-indigo-600">Feedback Tools</span>
-        </h1>
-        <p class="text-xl text-slate-600 leading-relaxed max-w-2xl">
-            Projector is a tool designed to help users quickly turn their ideas into simple, visual projects that can be easily shared with others.
-            
-        </p>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 min-h-screen py-10 px-4">
+
+    <div id="root"></div>
 </head>
 <body>
 <div class="container">
@@ -60,28 +62,6 @@
     <button type="submit" id="submitBtn">Generate & Download .RTF</button>
   </form>
 </div>
-
-    <form id="rtfForm">
-  <label>What do you want to accomplish?</label>
-  <textarea id="q1" maxlength="210" required></textarea>
-
-  <label>What's the biggest difference this will make?</label>
-  <textarea id="q2" maxlength="210" required></textarea>
-
-  <label>What does the completed project look like?</label>
-  <textarea id="q3" maxlength="210" required></textarea>
-
-  <label>What has to be true when this project is finished?</label>
-  <textarea id="q4" maxlength="210" required></textarea>
-
-  <label>What is the best result if you do take action?</label>
-  <textarea id="q5" maxlength="210" required></textarea>
-
-  <label>What is the worst result if you don't take action?</label>
-  <textarea id="q6" maxlength="210" required></textarea>
-
-  <button type="submit">Download .RTF</button>
-</form>
 <script> src="script.js"</script> 
 </body>
 </html>

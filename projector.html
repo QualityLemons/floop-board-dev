@@ -10,9 +10,56 @@
         </h1>
         <p class="text-xl text-slate-600 leading-relaxed max-w-2xl">
             Projector is a tool designed to help users quickly turn their ideas into simple, visual projects that can be easily shared with others.
+            
         </p>
 </head>
 <body>
+<div class="container">
+  <div class="form-header">
+    <h1>Project Clarity Tool</h1>
+    <p>Complete the fields below to generate your strategy document.</p>
+  </div>
+
+  <form id="rtfForm">
+    <div class="form-group">
+      <label for="q1">What do you want to accomplish?</label>
+      <textarea id="q1" maxlength="210" placeholder="e.g., Launch a new community garden..."></textarea>
+      <div class="counter">0 / 210</div>
+    </div>
+
+    <div class="form-group">
+      <label for="q2">What's the biggest difference this will make?</label>
+      <textarea id="q2" maxlength="210" placeholder="How does this change the status quo?"></textarea>
+      <div class="counter">0 / 210</div>
+    </div>
+
+    <div class="form-group">
+      <label for="q3">What does the completed project look like?</label>
+      <textarea id="q3" maxlength="210" placeholder="Describe the physical or digital end-state."></textarea>
+      <div class="counter">0 / 210</div>
+    </div>
+
+    <div class="form-group">
+      <label for="q4">What has to be true when this project is finished?</label>
+      <textarea id="q4" maxlength="210" placeholder="List the non-negotiable requirements."></textarea>
+      <div class="counter">0 / 210</div>
+    </div>
+
+    <div class="form-group">
+      <label for="q5">What is the best result if you do take action?</label>
+      <textarea id="q5" maxlength="210" placeholder="The high-impact 'win' scenario."></textarea>
+      <div class="counter">0 / 210</div>
+    </div>
+
+    <div class="form-group">
+      <label for="q6">What is the worst result if you don't take action?</label>
+      <textarea id="q6" maxlength="210" placeholder="The cost of inaction."></textarea>
+      <div class="counter">0 / 210</div>
+    </div>
+
+    <button type="submit" id="submitBtn">Generate & Download .RTF</button>
+  </form>
+</div>
 
     <form id="rtfForm">
   <label>What do you want to accomplish?</label>
@@ -36,29 +83,5 @@
   <button type="submit">Download .RTF</button>
 </form>
 <script> src="script.js"</script> 
- <section class="prose prose-slate max-w-none">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6">About the Project</h2>
-            <div class="grid md:grid-cols-2 gap-10">
-                <div>
-                    <h4 class="font-bold text-indigo-600 uppercase text-xs tracking-widest mb-2">The Mission</h4>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Traditional feedback forms can be intimidating. This sandbox explores modular "micro-interactions" that make giving feedback feel like a natural part of a conversation.
-                    </p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-indigo-600 uppercase text-xs tracking-widest mb-2">Design Principles</h4>
-                    <ul class="text-slate-600 text-sm space-y-2 list-disc pl-4">
-                        <li>Low cognitive load</li>
-                        <li>Mobile-first interaction</li>
-                        <li>Accessible and inclusive design</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="text-center pb-10 text-slate-400 text-xs tracking-widest uppercase">
-        &copy; 2026 Feedback Sandbox Project
-    </footer>
 </body>
 </html>

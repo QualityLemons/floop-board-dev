@@ -3,34 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projectourist</title>
-    <header class="mb-8">
-    <h1 class="text-4xl font-black text-slate-900 tracking-tight">Projectourist</h1>
-    <p class="text-slate-500 mt-2">Your library of completed project visions.</p>
-</header>
-
-<main id="gallery" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    </main>
+    <title>Projectourist Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <script>
-    const gallery = document.getElementById('gallery');
-    const projects = JSON.parse(localStorage.getItem('projectourist_data') || '[]');
+<body class="bg-slate-50 min-h-screen py-10 px-4">
+    <div class="max-w-4xl mx-auto">
+        <nav class="mb-6">
+            <a href="projector.html" class="text-indigo-600 font-bold hover:underline flex items-center gap-2">
+                <span>←</span> Back to Projector
+            </a>
+        </nav>
 
-    if (projects.length === 0) {
-        gallery.innerHTML = `<div class="col-span-full p-12 text-center bg-white rounded-xl border border-dashed border-slate-300 text-slate-400">No projects saved yet. Go to the Projector to start!</div>`;
-    } else {
-        gallery.innerHTML = projects.map(p => `
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                <span class="text-xs font-bold text-indigo-500 uppercase tracking-widest">${p.date}</span>
-                <h3 class="text-lg font-bold text-slate-800 mt-1 mb-3 line-clamp-2">${p.q1}</h3>
-                <p class="text-sm text-slate-500 line-clamp-3 mb-4 italic">"${p.q2}"</p>
-                <div class="pt-4 border-t border-slate-50 flex justify-between items-center">
-                    <span class="text-xs text-slate-400 underline cursor-pointer">View Details</span>
+        <header class="mb-8">
+            <h1 class="text-4xl font-black text-slate-900 tracking-tight">Projectourist</h1>
+            <p class="text-slate-500 mt-2">A local gallery of your submitted project visions.</p>
+        </header>
+
+        <main id="projectGallery" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            </main>
+
+        <div class="mt-10 pt-6 border-t border-slate-200">
+            <button onclick="clearGallery()" class="text-sm text-red-500 font-medium hover:underline">
+                Clear all saved projects
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function loadProjects() {
+            const gallery = document.getElementById('projectGallery');
+            const data = JSON.parse(localStorage.getItem('projectourist_data') || '[]');
+
+            if (data.length === 0) {
+                gallery.innerHTML = `
+                    <div class="col-span-full bg-white border-2 border-dashed border-slate-200 rounded-xl p-12 text-center">
+                        <p class="text-slate-400 font-medium">No projects saved yet.</p>
+                    </div>`;
+                return;
+            }
+
+            gallery.innerHTML = data.map((project, index) => `
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">${project.date}</span>
+                            <button onclick="deleteProject(${index})" class="text-slate-300 hover:text-red-500 text-lg">&times;</button>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2 leading-tight">${project.q1}</h3>
+                        <p class="text-slate-600 text-sm line-clamp-3 italic">"${project.q2}"</p>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-slate-50 flex gap-4">
+                        <button onclick='downloadExisting(${JSON.stringify(project)})' class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
+                            DOWNLOAD RTF
+                        </button>
+                    </div>
                 </div>
-            </div>
-        `).join('');
-    }
-</script>
+            `).join('');
+        }
+
+        function deleteProject(index) {
+            const data = JSON.parse(localStorage.getItem('projectourist_data') || '[]');
+            data.splice(index, 1);
+            localStorage.setItem('projectourist_data', JSON.stringify(data));
+            loadProjects();
+        }
+
+        function clearGallery() {
+            if(confirm("Are you sure? This will delete all locally saved projects.")) {
+                localStorage.removeItem('projectourist_data');
+                loadProjects();
+            }
+        }
+
+        // Re-generate RTF from gallery card
+        function downloadExisting(project) {
+            const rtfHeader = "{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Arial;}}\\f0\\fs28 ";
+            const rtfBody = `\\b PROJECT SUMMARY \\b0 \\line Generated on: ${project.date} \\line \\line \\b Goal: \\b0 ${project.q1} \\line \\b Difference: \\b0 ${project.q2} \\line \\b End State: \\b0 ${project.q3} \\line \\b Requirements: \\b0 ${project.q4} \\line \\b Best Case: \\b0 ${project.q5} \\line \\b Worst Case: \\b0 ${project.q6} }`;
+            const blob = new Blob([rtfHeader + rtfBody], { type: 'application/rtf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Project-${Date.now()}.rtf`;
+            a.click();
+        }
+
+        window.onload = loadProjects;
+    </script>
 </body>
 </html>

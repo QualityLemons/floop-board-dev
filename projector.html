@@ -1,31 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projector</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projector</title>
 </head>
 <body class="bg-slate-50 min-h-screen py-10 px-4">
-    <div id="root"></div>
-                    <header className="mb-8">
-                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Projector</h1>
-                        <p className="text-slate-500 mt-2">A minimalist tool for turning ideas into shareable projects.</p>
-                    </header>
-(
-                <div className="max-w-3xl mx-auto">
-                    <nav className="mb-6">
-                        <a href="index.html" className="text-indigo-600 font-bold hover:underline">
-                            ← Back to Hub
-                        </a>
-                    </nav>
+    <div class="max-w-3xl mx-auto">
+        <nav class="mb-6">
+            <a href="index.html" class="text-indigo-600 font-bold hover:underline flex items-center gap-2">
+                <span>←</span> Back to Hub
+            </a>
+        </nav>
 
+        <header class="mb-8">
+            <h1 class="text-4xl font-black text-slate-900 tracking-tight">Projector</h1>
+            <p class="text-slate-500 mt-2">Turn your idea into an easy-to-understand project to share with classmates, colleagues, friends, or family.</p>
+        </header>
 
-   <form id="rtfForm">
+        <main class="bg-white rounded-lg shadow-md border p-6">
+            </main>
+          <form id="rtfForm">
     <div class="form-group">
       <label for="q1">What do you want to accomplish?</label>
       <textarea id="q1" maxlength="210" placeholder="e.g., Launch a new community garden..."></textarea>
@@ -62,14 +57,14 @@
       <div class="counter">0 / 210</div>
     </div>
 
-    <button 
-                        onClick={handleSubmit}
-                        className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-full font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all"
-                    >
-                        Generate Project Summary
-                    </button>
-  </form>
+    <button class="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-full font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all">
+            Generate my Project!
+        </button>form>
 </div>
 <script> src="script.js"</script> 
+        
+    </div>
 </body>
-</html> 
+  
+</body>
+</html>

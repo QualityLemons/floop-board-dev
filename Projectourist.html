@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projectourist</title>
+    <header class="mb-8">
+    <h1 class="text-4xl font-black text-slate-900 tracking-tight">Projectourist</h1>
+    <p class="text-slate-500 mt-2">Your library of completed project visions.</p>
+</header>
+
+<main id="gallery" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    </main>
+</head>
+<body>
+    <script>
+    const gallery = document.getElementById('gallery');
+    const projects = JSON.parse(localStorage.getItem('projectourist_data') || '[]');
+
+    if (projects.length === 0) {
+        gallery.innerHTML = `<div class="col-span-full p-12 text-center bg-white rounded-xl border border-dashed border-slate-300 text-slate-400">No projects saved yet. Go to the Projector to start!</div>`;
+    } else {
+        gallery.innerHTML = projects.map(p => `
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                <span class="text-xs font-bold text-indigo-500 uppercase tracking-widest">${p.date}</span>
+                <h3 class="text-lg font-bold text-slate-800 mt-1 mb-3 line-clamp-2">${p.q1}</h3>
+                <p class="text-sm text-slate-500 line-clamp-3 mb-4 italic">"${p.q2}"</p>
+                <div class="pt-4 border-t border-slate-50 flex justify-between items-center">
+                    <span class="text-xs text-slate-400 underline cursor-pointer">View Details</span>
+                </div>
+            </div>
+        `).join('');
+    }
+</script>
+</body>
+</html>

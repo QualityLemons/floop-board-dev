@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totes Emote</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { overscroll-behavior-y: contain; } /* Prevents pull-to-refresh on mobile */
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen py-10 px-4">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+
+        // --- 1. SHARED TOOL CONTAINER ---
+        const ToolContainer = ({ title, description, children, onReset }) => (
+            <div className="max-w-xl mx-auto border-2 border-slate-200 rounded-2xl p-6 bg-white shadow-sm mb-10">
+                <div className="mb-6 border-b border-slate-100 pb-4 flex justify-between items-start">
+                    <div>
+                        <h3 className="text-xl font-bold text-slate-800">{title}</h3>
+                        <p className="text-sm text-slate-500 mt-1">{description}</p>
+                    </div>
+                    <button 
+                        onClick={onReset} 
+                        className="text-xs font-bold text-indigo-500 hover:text-indigo-700 uppercase tracking-widest transition-colors"
+                    >
+                        Reset
+                    </button>
+                </div>
+                <div className="tool-content min-h-[160px] flex flex-col items-center justify-center bg-slate-50 rounded-xl p-4 border border-dashed border-slate-200">
+                    {children}
+                </div>
+            </div>
+        );
+
+        // --- 2. EMOJI FEEDBACK TOOL ---
+        const EmojiTool = () => {
+            const [rating, setRating] = useState(null);
+            const emojis = ['😢', '😐', '😊', '🤩'];
+
+            return (
+                <ToolContainer 
+                    title="How are you feeling?" 
+                    description="A quick sentiment check for younger users."
+                    onReset={() => setRating(null)}
+                >
+                    <div className="flex gap-6 text-5xl">
+                        {emojis.map((emoji) => (
+                            <button 
+                                key={emoji} 
+                                onClick={() => setRating(emoji)}
+                                className={`transition-all duration-300 transform hover:scale-110 ${
+                                    rating === emoji ? "grayscale-0 scale-125 drop-shadow-lg" : "grayscale opacity-30 hover:opacity-60"
+                                }`}
+                            >
+                                {emoji}
+                            </button>
+                        ))}
+                    </div>
+                    {rating && <p className="mt-4 text-slate-400 text-sm font-medium">Captured: {rating}</p>}
+                </ToolContainer>
+            );
+        };
+
+        // --- 3. DRAWING CANVAS TOOL ---
+        const DrawingCanvas = () => {
+            const canvasRef = useRef(null);
+            const contextRef = useRef(null);
+            const [isDrawing, setIsDrawing] = useState(false);
+            const [activeColor, setActiveColor] = useState('#0f172a');
+
+            const colors = [
+                { name: 'Blue', value: '#3b82f6' },
+                { name: 'Yellow', value: '#eab308' },
+                { name: 'Orange', value: '#f97316' },
+                { name: 'Black', value: '#0f172a' }
+            ];
+
+            useEffect(() => {
+                const canvas = canvasRef.current;
+                canvas.width = canvas.offsetWidth * 2;
+                canvas.height = canvas.offsetHeight * 2;
+                const context = canvas.getContext('2d');
+                context.scale(2, 2);
+                context.lineCap = 'round';
+                context.lineWidth = 4;
+                contextRef.current = context;
+            }, []);
+
+            useEffect(() => {
+                if (contextRef.current) {
+                    contextRef.current.strokeStyle = activeColor;
+                }
+            }, [activeColor]);
+
+            const getCoords = (e) => {
+                const rect = canvasRef.current.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            };
+
+            const start = (e) => {
+                const { x, y } = getCoords(e);
+                contextRef.current.beginPath();
+                contextRef.current.moveTo(x, y);
+                setIsDrawing(true);
+            };
+
+            const draw = (e) => {
+                if (!isDrawing) return;
+                const { x, y } = getCoords(e);
+                contextRef.current.lineTo(x, y);
+                contextRef.current.stroke();
+            };
+
+            const stop = () => {
+                if (isDrawing) {
+                    contextRef.current.closePath();
+                    setIsDrawing(false);
+                }
+            };
+
+            const clear = () => {
+                const ctx = canvasRef.current.getContext('2d');
+                ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            };
+
+            return (
+                <ToolContainer 
+                    title="Visual Sketch" 
+                    description="Draw a picture to describe your experience."
+                    onReset={clear}
+                >
+                    <div className="w-full flex flex-col gap-4">
+                        <canvas 
+                            ref={canvasRef}
+                            onMouseDown={start} onMouseMove={draw} onMouseUp={stop} onMouseLeave={stop}
+                            onTouchStart={start} onTouchMove={draw} onTouchEnd={stop}
+                            className="w-full h-64 bg-white border border-slate-200 rounded-lg cursor-crosshair touch-none shadow-inner"
+                        />
+                        <div className="flex justify-center gap-4">
+                            {colors.map((c) => (
+                                <button 
+                                    key={c.name}
+                                    onClick={() => setActiveColor(c.value)}
+                                    className={`w-10 h-10 rounded-full border-4 transition-all ${
+                                        activeColor === c.value ? 'border-slate-300 scale-110 shadow-md' : 'border-transparent opacity-80 hover:opacity-100'
+                                    }`}
+                                    style={{ backgroundColor: c.value }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </ToolContainer>
+            );
+        };
+
+        // --- 4. MAIN APP ---
+        const App = () => (
+            <div className="container mx-auto">
+                <header className="text-center mb-12">
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tight">Feedback Sandbox</h1>
+                    <div className="mt-2 inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full uppercase tracking-widest">
+                        v2.0 Clean Build
+                    </div>
+                </header>
+                
+                <main>
+                    <EmojiTool />
+                    <DrawingCanvas />
+                </main>
+
+                <footer className="text-center mt-12 text-slate-400 text-sm">
+                    Build with intention. No bloat allowed.
+                </footer>
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

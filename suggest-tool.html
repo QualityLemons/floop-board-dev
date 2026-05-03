@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggest a Tool — Floop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans selection:bg-indigo-100 min-h-screen">
+
+    <div class="max-w-2xl mx-auto px-6 pt-10 pb-20">
+
+        <nav class="mb-10">
+            <a href="index.html" class="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
+                ← Back to Hub
+            </a>
+        </nav>
+
+        <header class="mb-10">
+            <div class="text-4xl mb-3">💡</div>
+            <h1 class="text-4xl font-black tracking-tight text-slate-900 mb-2">Suggest a Tool</h1>
+            <p class="text-slate-500 leading-relaxed">
+                Got an idea for a new Floop tool? Answer these questions to help us understand what you have in mind and who it would help most.
+            </p>
+        </header>
+
+        <div id="successBanner" class="hidden mb-8 p-6 bg-indigo-50 border-2 border-indigo-200 rounded-2xl text-center">
+            <div class="text-3xl mb-2">🎉</div>
+            <p class="font-bold text-indigo-800 text-lg">Thanks for your suggestion!</p>
+            <p class="text-sm text-indigo-600 mt-1">Your idea has been saved. We'd love to build it.</p>
+            <a href="index.html" class="inline-block mt-4 text-xs font-bold text-indigo-500 uppercase tracking-widest hover:text-indigo-700 transition-colors">← Back to Hub</a>
+        </div>
+
+        <main class="bg-white border-2 border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+
+            <div class="bg-indigo-600 px-8 py-5">
+                <p class="text-indigo-100 text-sm font-medium uppercase tracking-widest">Section 1 of 3</p>
+                <p class="text-white font-bold text-lg mt-1">What will the tool do?</p>
+            </div>
+
+            <form id="suggestForm" class="p-8 space-y-8">
+
+                <div class="form-group">
+                    <label class="block text-sm font-bold text-slate-700 mb-2" for="s1q1">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-black">1</span>
+                            What is the name or working title of the tool?
+                        </span>
+                    </label>
+                    <input
+                        type="text"
+                        id="s1q1"
+                        maxlength="80"
+                        class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm focus:ring-0 focus:border-indigo-500 outline-none transition-colors"
+                        placeholder="e.g., Mood Map, Quick Poll, Story Builder…"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-sm font-bold text-slate-700 mb-2" for="s1q2">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-black">2</span>
+                            What problem does this tool solve or what feedback does it capture?
+                        </span>
+                    </label>
+                    <textarea
+                        id="s1q2"
+                        maxlength="300"
+                        rows="3"
+                        class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm focus:ring-0 focus:border-indigo-500 outline-none transition-colors resize-none"
+                        placeholder="Describe what the tool effectively does in plain language."
+                    ></textarea>
+                    <div class="text-right text-xs text-slate-400 mt-1"><span class="counter">0</span> / 300</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-sm font-bold text-slate-700 mb-2" for="s1q3">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-black">3</span>
+                            What does a successful interaction look like from the user's point of view?
+                        </span>
+                    </label>
+                    <textarea
+                        id="s1q3"
+                        maxlength="300"
+                        rows="3"
+                        class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm focus:ring-0 focus:border-indigo-500 outline-none transition-colors resize-none"
+                        placeholder="Walk us through what the user sees, does, and feels."
+                    ></textarea>
+                    <div class="text-right text-xs text-slate-400 mt-1"><span class="counter">0</span> / 300</div>
+                </div>
+
+                <hr class="border-slate-100" />
+
+                <div class="pt-2">
+                    <p class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-1">Section 2 of 3</p>
+                    <p class="font-bold text-slate-800 text-lg">How would we build it?</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-sm font-bold text-slate-700 mb-2" for="s2q1">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-violet-600 text-white text-xs flex items-center justify-center font-black">4</span>
+                            What are the key steps needed to get a working version of this tool?
+                        </span>
+                    </label>
+                    <textarea
+                        id="s2q1"
+                        maxlength="400"
+                        rows="4"
+                        class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm focus:ring-0 focus:border-violet-500 outline-none transition-colors resize-none"
+                        placeholder="List the main steps, e.g. design the interface → define the questions → add a submit action → show a result…"
+                    ></textarea>
+                    <div class="text-right text-xs text-slate-400 mt-1"><span class="counter">0</span> / 400</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-sm font-bold text-slate-700 mb-2" for="s2q2">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-violet-600 text-white text-xs flex items-center justify-center font-black">5</span>
+                            Are there any existing tools, apps, or websites that do something similar?
+                        </span>
+                    </label>
+                    <textarea
+                        id="s2q2"
+                        maxlength="300"
+                        rows="3"
+                        class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm focus:ring-0 focus:border-violet-500 outline-none transition-colors resize-none"
+                        placeholder="e.g., 'It's a bit like Mentimeter but simpler' or 'I haven't seen anything like it.'"
+                    ></textarea>
+                    <div class="text-right text-xs text-slate-400 mt-1"><span class="counter">0</span> / 300</div>
+                </div>
+
+                <hr class="border-slate-100" />
+
+                <div class="pt-2">
+                    <p class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-1">Section 3 of 3</p>
+                    <p class="font-bold text-slate-800 text-lg">Who is it for?</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-sm font-bold text-slate-700 mb-3" for="s3q1">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center font-black">6</span>
+                            Who would get the most out of this tool?
+                        </span>
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="audienceGrid">
+                        <label class="audience-option flex items-center gap-2 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-teal-400 transition-colors">
+                            <input type="checkbox" value="Students" class="accent-teal-600" /> <span class="text-sm font-medium">Students</span>
+                        </label>
+                        <label class="audience-option flex items-center gap-2 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-teal-400 transition-colors">
+                            <input type="checkbox" value="Teachers" class="accent-teal-600" /> <span class="text-sm font-medium">Teachers</span>
+                        </label>
+                        <label class="audience-option flex items-center gap-2 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-teal-400 transition-colors">
+                            <input type="checkbox" value="Young children" class="accent-teal-600" /> <span class="text-sm font-medium">Young children</span>
+                        </label>
+                        <label class="audience-option flex items-center gap-2 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-teal-400 transition-colors">
+                            <input type="checkbox" value="Facilitators" class="accent-teal-600" /> <span class="text-sm font-medium">Facilitators</span>
+                        </label>
+                        <label class="audience-option flex items-center gap-2 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-teal-400 transition-colors">
+                            <input type="checkbox" value="Teams" class="accent-teal-600" /> <span class="text-sm font-medium">Teams</span>
+                        </label>
+                        <label class="audience-option flex items-center gap-2 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-teal-400 transition-colors">
+                            <input type="checkbox" value="General public" class="accent-teal-600" /> <span class="text-sm font-medium">General public</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-sm font-bold text-slate-700 mb-2" for="s3q2">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center font-black">7</span>
+                            Describe the ideal person who would use this tool in one or two sentences.
+                        </span>
+                    </label>
+                    <textarea
+                        id="s3q2"
+                        maxlength="300"
+                        rows="3"
+                        class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm focus:ring-0 focus:border-teal-500 outline-none transition-colors resize-none"
+                        placeholder="e.g., 'A year 7 student who finds written feedback uncomfortable but loves visuals.'"
+                    ></textarea>
+                    <div class="text-right text-xs text-slate-400 mt-1"><span class="counter">0</span> / 300</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-sm font-bold text-slate-700 mb-2" for="s3q3">
+                        <span class="inline-flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center font-black">8</span>
+                            Anything else you'd like to add?
+                        </span>
+                        <span class="text-slate-400 font-normal text-xs ml-1">(optional)</span>
+                    </label>
+                    <textarea
+                        id="s3q3"
+                        maxlength="300"
+                        rows="3"
+                        class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm focus:ring-0 focus:border-teal-500 outline-none transition-colors resize-none"
+                        placeholder="Sketches, links, references, or any other thoughts…"
+                    ></textarea>
+                    <div class="text-right text-xs text-slate-400 mt-1"><span class="counter">0</span> / 300</div>
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full px-6 py-4 bg-indigo-600 text-white rounded-2xl font-bold text-base shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-[0.98] transition-all duration-150"
+                >
+                    Submit My Suggestion
+                </button>
+
+            </form>
+        </main>
+
+    </div>
+
+    <footer class="text-center pb-10 text-slate-400 text-xs tracking-widest uppercase">
+        &copy; 2026 Feedback Sandbox Project
+    </footer>
+
+    <script>
+        document.querySelectorAll('.form-group textarea').forEach(function(area) {
+            area.addEventListener('input', function() {
+                var counter = this.parentElement.querySelector('.counter');
+                var len = this.value.length;
+                counter.textContent = len;
+                var max = parseInt(this.getAttribute('maxlength'));
+                if (len >= max) {
+                    counter.classList.add('text-red-500', 'font-bold');
+                } else {
+                    counter.classList.remove('text-red-500', 'font-bold');
+                }
+            });
+        });
+
+        document.querySelectorAll('#audienceGrid input[type="checkbox"]').forEach(function(box) {
+            box.addEventListener('change', function() {
+                var label = this.closest('label');
+                if (this.checked) {
+                    label.classList.add('border-teal-500', 'bg-teal-50');
+                } else {
+                    label.classList.remove('border-teal-500', 'bg-teal-50');
+                }
+            });
+        });
+
+        document.getElementById('suggestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var nameField = document.getElementById('s1q1');
+            if (!nameField.value.trim()) {
+                nameField.focus();
+                nameField.classList.add('border-red-400');
+                return;
+            }
+            nameField.classList.remove('border-red-400');
+
+            var audiences = Array.from(
+                document.querySelectorAll('#audienceGrid input[type="checkbox"]:checked')
+            ).map(function(b) { return b.value; });
+
+            var suggestion = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                name: document.getElementById('s1q1').value,
+                problem: document.getElementById('s1q2').value,
+                interaction: document.getElementById('s1q3').value,
+                steps: document.getElementById('s2q1').value,
+                similar: document.getElementById('s2q2').value,
+                audiences: audiences,
+                idealUser: document.getElementById('s3q2').value,
+                extra: document.getElementById('s3q3').value
+            };
+
+            var existing = JSON.parse(localStorage.getItem('floop_suggestions') || '[]');
+            existing.unshift(suggestion);
+            localStorage.setItem('floop_suggestions', JSON.stringify(existing));
+
+            document.getElementById('suggestForm').classList.add('hidden');
+            var banner = document.getElementById('successBanner');
+            banner.classList.remove('hidden');
+            banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    </script>
+
+</body>
+</html>

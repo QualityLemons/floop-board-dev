@@ -203,11 +203,16 @@
                 </div>
 
                 <button
+                    id="submitBtn"
                     type="submit"
                     class="w-full px-6 py-4 bg-indigo-600 text-white rounded-2xl font-bold text-base shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-[0.98] transition-all duration-150"
                 >
                     Submit My Suggestion
                 </button>
+
+                <div id="errorBanner" class="hidden mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-xl text-sm text-red-700 text-center">
+                    Something went wrong sending your suggestion. Please try again, or email us directly.
+                </div>
 
             </form>
         </main>
@@ -244,6 +249,8 @@
             });
         });
 
+        var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyRu4MklWmOGIgEVZ5vwAAED510J04ZLTxPUOy4DYDXpySHzEa2JW3hcjNiZY3RcbEMow/exec';
+
         document.getElementById('suggestForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -254,32 +261,53 @@
                 return;
             }
             nameField.classList.remove('border-red-400');
+            document.getElementById('errorBanner').classList.add('hidden');
 
             var audiences = Array.from(
                 document.querySelectorAll('#audienceGrid input[type="checkbox"]:checked')
             ).map(function(b) { return b.value; });
 
             var suggestion = {
-                id: Date.now(),
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
                 name: document.getElementById('s1q1').value,
                 problem: document.getElementById('s1q2').value,
                 interaction: document.getElementById('s1q3').value,
                 steps: document.getElementById('s2q1').value,
                 similar: document.getElementById('s2q2').value,
-                audiences: audiences,
+                audiences: audiences.join(', '),
                 idealUser: document.getElementById('s3q2').value,
                 extra: document.getElementById('s3q3').value
             };
 
-            var existing = JSON.parse(localStorage.getItem('floop_suggestions') || '[]');
-            existing.unshift(suggestion);
-            localStorage.setItem('floop_suggestions', JSON.stringify(existing));
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
 
-            document.getElementById('suggestForm').classList.add('hidden');
-            var banner = document.getElementById('successBanner');
-            banner.classList.remove('hidden');
-            banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            fetch(SHEETS_URL, {
+                method: 'POST',
+                body: JSON.stringify(suggestion)
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.result === 'success') {
+                    var existing = JSON.parse(localStorage.getItem('floop_suggestions') || '[]');
+                    existing.unshift(suggestion);
+                    localStorage.setItem('floop_suggestions', JSON.stringify(existing));
+
+                    document.getElementById('suggestForm').classList.add('hidden');
+                    var banner = document.getElementById('successBanner');
+                    banner.classList.remove('hidden');
+                    banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    throw new Error('Unexpected response');
+                }
+            })
+            .catch(function() {
+                btn.disabled = false;
+                btn.textContent = 'Submit My Suggestion';
+                document.getElementById('errorBanner').classList.remove('hidden');
+                document.getElementById('errorBanner').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
         });
     </script>
 
